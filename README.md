@@ -1,1 +1,1 @@
-# SP_pixel_battle
+# SP_pixel_tactics
