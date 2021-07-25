@@ -18,9 +18,6 @@ class flankAbilityId {
 class rearAbilityId {
 
 }
-class orderId {
-
-}
 
 class berserk extends Card {
     constructor() {
