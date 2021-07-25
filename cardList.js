@@ -1,23 +1,30 @@
 class passiveAbilityID {
-    constructor() {
-
+    constructor(id) {
+        this.id = id;
     }
 }
 class spellID {
-    constructor() {
-
+    constructor(id) {
+        this.id = id;
     }
 }
 
 class vanguardAbilityId {
-
+    constructor(combinedId) {
+        this.id = combinedId;
+    }
 }
 class flankAbilityId {
-
+    constructor(combinedId) {
+        this.id = combinedId;
+    }
 }
 class rearAbilityId {
-
+    constructor(combinedId) {
+        this.id = combinedId;
+    }
 }
+
 
 class berserk extends Card {
     constructor() {
@@ -166,25 +173,6 @@ class summoner extends Card {
         super(5, 2, vanguardAbilityId, flankAbilityId, rearAbilityId, orderId);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
