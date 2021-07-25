@@ -1,4 +1,4 @@
-class passiveAbilityID {
+/*class passiveAbilityID {
     constructor(id) {
         this.id = id;
     }
@@ -7,7 +7,7 @@ class spellID {
     constructor(id) {
         this.id = id;
     }
-}
+}*/
 
 class vanguardAbilityId {
     constructor(combinedId) {
