@@ -13,17 +13,19 @@ id эффекта лидера
 
 
 class Card {
-    constructor(hp, damage, vanguardAbilityId, flankAbilityId, rearAbilityId, orderId) {
+    constructor(hp, damage, vanguardAbilityId, flankAbilityId, rearAbilityId, orderId, name) {
         this.hp = hp;
         this.damage = damage;
         this.vanguardAbilityId = vanguardAbilityId;
         this.flankAbilityId = flankAbilityId;
         this.rearAbilityId = rearAbilityId;
         this.orderId = orderId;
+        this.img = new Image();
+        this.img.src = "assets/deck/" + name + ".png"
     }
-    constructor(hp, damage, leaderId) {
-        this.hp = hp;
-        this.damage = damage;
-        this.leaderId = leaderId;
-    }
+    // constructor(hp, damage, leaderId) {
+    //     this.hp = hp;
+    //     this.damage = damage;
+    //     this.leaderId = leaderId;
+    // }
 }
