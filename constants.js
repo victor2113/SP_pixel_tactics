@@ -5,7 +5,7 @@ const CARD_WIDTH = 92;
 const CARD_HEIGHT = 138;
 
 const USED_CARD_WIDTH = 0;
-const SED_CARD_HEIGHT = 0;
+const USED_CARD_HEIGHT = 0;
 
 const GAME_BACKGROUND = "assets/background.png";
 
