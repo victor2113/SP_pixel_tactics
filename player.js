@@ -6,13 +6,18 @@ class Container {
         this.height = height;
         this.object = null;
     }
+
     drawContent() {
         if (this.object) {
-            console.log(this.object);
             ctx.drawImage(this.object.img, this.x, this.y, this.width, this.height)
         }
     }
+
     drawHoverLight() {
+
+    }
+
+    drawZoom() {
 
     }
 }
@@ -22,12 +27,13 @@ class Field {
     constructor(position) {
         this.grid = [[null, null, null], [null, null, null], [null, null, null]];
 
-        for (let i = 0; i < 3 * (GRID_MARGIN + CARD_WIDTH); i += GRID_MARGIN + CARD_WIDTH) {
-            for (let j = 0; j < 3 * (GRID_MARGIN + CARD_HEIGHT); j += GRID_MARGIN + CARD_HEIGHT)
-                this.grid[i / (GRID_MARGIN + CARD_WIDTH)][j / (GRID_MARGIN + CARD_HEIGHT)] = new Container(eval("BEGIN_" + position + "_GRID_X") + i, BEGIN_GRID_Y + j, CARD_WIDTH, CARD_HEIGHT)
+        for (let i = 0; i < 3 * (X_SIZE); i += X_SIZE) {
+            for (let j = 0; j < 3 * (Y_SIZE); j += Y_SIZE)
+                this.grid[i / (X_SIZE)][j / (Y_SIZE)] = new Container(eval("BEGIN_" + position + "_GRID_X") + i, BEGIN_GRID_Y + j, CARD_WIDTH, CARD_HEIGHT)
         }
 
     }
+
     drawGrid() {
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
@@ -42,9 +48,11 @@ class Hand {
     constructor() {
         this.hand = []
     }
+
     add_card(card) {
         this.hand.push(card)
     }
+
     delete_card(index) {
         if (index >= this.hand.length) {
             this.hand.splice(index, 1);
@@ -55,6 +63,7 @@ class Hand {
 
 class Deck {
     constructor() {
+        //TODO
     }
 }
 
@@ -76,6 +85,7 @@ class Board {
         this.player_left = new Player(name1, "LEFT"); //создающий комнату
         this.player_right = new Player(name2, "RIGHT");//бот или подключенный пользователь
     }
+
     drawBoard() {
         this.player_left.field.drawGrid();
         this.player_right.field.drawGrid();
