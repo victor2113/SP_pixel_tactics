@@ -16,3 +16,5 @@ const GRID_MARGIN = 5;
 
 const X_SIZE = CARD_WIDTH + GRID_MARGIN
 const Y_SIZE = CARD_HEIGHT + GRID_MARGIN
+
+const len = 20;
