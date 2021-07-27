@@ -25,7 +25,11 @@ class Container {
 
 class Field {
     constructor(position) {
-        this.grid = [[null, null, null], [null, null, null], [null, null, null]];
+        this.grid = [
+            [null, null, null],
+            [null, null, null],
+            [null, null, null]
+        ];
 
         for (let i = 0; i < 3 * (X_SIZE); i += X_SIZE) {
             for (let j = 0; j < 3 * (Y_SIZE); j += Y_SIZE)
@@ -62,8 +66,19 @@ class Hand {
 
 
 class Deck {
-    constructor() {
-        //TODO
+    constructor(cards) {
+        this.cards = cards;
+    }
+
+
+    shufleDeck() {
+        cards.sort(() => Math.random() - 0.5);
+    }
+
+    drawCard() {
+        topcard = this.cards[0];
+        this.cards.splice(0, 1);
+        return topcard;
     }
 }
 
@@ -83,7 +98,7 @@ class Player {
 class Board {
     constructor(name1, name2) {
         this.player_left = new Player(name1, "LEFT"); //создающий комнату
-        this.player_right = new Player(name2, "RIGHT");//бот или подключенный пользователь
+        this.player_right = new Player(name2, "RIGHT"); //бот или подключенный пользователь
     }
 
     drawBoard() {
