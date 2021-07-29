@@ -1,10 +1,10 @@
 //файл, описывающий цикл игры
 
 
-let firstPlayerName = prompt("Имя первого игрока", "Red");
-let secondPlayerName = prompt("Имя второго игрока", "Blue");
+// let firstPlayerName = prompt("Имя первого игрока", "Red");
+// let secondPlayerName = prompt("Имя второго игрока", "Blue");
 
-board = new Board(firstPlayerName, secondPlayerName);
+board = new Board("Red", "Blue");
 menu = new Menu();
 
 board.player_left.deck.shuffleDeck();
