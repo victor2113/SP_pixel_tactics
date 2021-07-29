@@ -1,3 +1,45 @@
+function checkMouseCollision(x, y, w, h, posX, posY) {
+    return (x < posX && (x + w) > posX && y < posY && (y + h) > posY);
+}
+
+class Menu {
+    constructor() {
+        this.actions = [
+            {title: "Взять карту из колоды", y: 0},
+            {title: "Разыграть карту", y: 0},
+            {title: "Атака", y: 0},
+            {title: "Заклинание", y: 0},
+            {title: "Приказ", y: 0},
+            {title: "Убрать тело", y: 0},
+            {title: "Передвинуть карту", y: 0},
+            {title: "Рокировка", y: 0},
+            {title: "Пас", y: 0}
+        ];
+        this.index = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        for (let i = 0; i < 9; i++) {
+            this.actions[i].y = this.index[i] * 40;
+        }
+
+        this.x = CANVAS_WIDTH - 340;
+        this.width = 340;
+        this.height = 40;
+    }
+
+    drawMenu() {
+        ctx.font = "32px Verdana";
+        ctx.textAlign = "right";
+        for (let i = 0; i < 9; i++) {
+            if (checkMouseCollision(this.x, this.actions[i].y - 40, this.width, this.height, mouse.x, mouse.y)) {
+                ctx.fillStyle = "#f59a9a";
+
+            } else {
+                ctx.fillStyle = "rgba(255,255,255,0.4)";
+            }
+            ctx.fillText(this.actions[i].title, CANVAS_WIDTH - 5, this.actions[i].y, this.width);
+        }
+    }
+}
+
 class MouseControls {
     constructor(container = document.body) {
         this.container = container;
@@ -9,11 +51,11 @@ class MouseControls {
         this.isDawn = false;
         this.isUp = false;
 
-        container.addEventListener('mouseup',     event => this.changeState(event));
-        container.addEventListener('mousedown',   event => this.changeState(event));
-        container.addEventListener('mousemove',   event => this.changeState(event));
-        container.addEventListener('mousewheel',  event => this.changeState(event));
-        container.addEventListener('mouseleave',  event => this.changeState(event));
+        container.addEventListener('mouseup', event => this.changeState(event));
+        container.addEventListener('mousedown', event => this.changeState(event));
+        container.addEventListener('mousemove', event => this.changeState(event));
+        container.addEventListener('mousewheel', event => this.changeState(event));
+        container.addEventListener('mouseleave', event => this.changeState(event));
         container.addEventListener('contextmenu', event => this.changeState(event));
     }
 
@@ -27,13 +69,11 @@ class MouseControls {
             this.isPressed = true;
             this.isDawn = true;
             this.isUp = false;
-        }
-        else if (event.type === 'mouseup' || event.type === 'mouseleave') {
+        } else if (event.type === 'mouseup' || event.type === 'mouseleave') {
             this.isPressed = false;
             this.isDawn = false;
             this.isUp = true;
-        }
-        else if (event.type === 'contextmenu' || event.type === 'mousewheel') {
+        } else if (event.type === 'contextmenu' || event.type === 'mousewheel') {
             event.preventDefault();
         }
     }
@@ -42,39 +82,6 @@ class MouseControls {
         this.isDawn = false;
         this.isUp = false;
     }
-}
-
-
-/*
-
-модель карты
-1) хп
-2) урон, который может наносить
-3) id эффекта авангарда
-4) id эффекта флага
-5) id эффекта тыла
-6) id эффекта приказа
-7) лидер:
-хп и урон лидера
-id эффекта лидера
-
-*/
-class Card {
-    constructor(hp, damage, vanguardAbilityId, flankAbilityId, rearAbilityId, orderId, name) {
-        this.hp = hp;
-        this.damage = damage;
-        this.vanguardAbilityId = vanguardAbilityId;
-        this.flankAbilityId = flankAbilityId;
-        this.rearAbilityId = rearAbilityId;
-        this.orderId = orderId;
-        this.img = new Image();
-        this.img.src = "assets/deck/" + name + ".png"
-    }
-    // constructor(hp, damage, leaderId) {
-    //     this.hp = hp;
-    //     this.damage = damage;
-    //     this.leaderId = leaderId;
-    // }
 }
 
 
@@ -96,13 +103,32 @@ class Container {
     }
 
     drawContent() {
+        this.Hover();
         if (this.object)
             ctx.drawImage(this.object.img, this.x, this.y, this.width, this.height);
-
-        this.drawHoverLight();
     }
+
     // пока получилась смешанная функция, позже нужно доработать
-    drawHoverLight() {
+    Hover() {
+        ctx.lineWidth = 3;
+        if (checkMouseCollision(this.x, this.y, this.width, this.height, mouse.x, mouse.y)) {
+            this.isControl = true;
+            if (mouse.isDawn) {
+                console.log('container pressed');
+                this.isPressed = true;
+
+            } else if (this.isPressed && mouse.isUp) {
+                this.isPressed = false;
+                this.isSelected = !this.isSelected;
+                // selectedCards.push(board.player_left.field.grid[i][j]);
+                // console.log(selectedCards);
+            }
+
+        } else {
+            // console.log('out container');
+            this.isControl = false;
+        }
+
         if (this.isSelected)
             ctx.strokeStyle = this.thirdColor;
 
@@ -167,18 +193,20 @@ class Deck {
     constructor(cards) {
         this.cards = cards;
     }
-    shufleDeck() {
+
+    shuffleDeck() {
         cards.sort(() => Math.random() - 0.5);
     }
+
     drawCard() {
-        let topcard = this.cards[0];
+        let topCard = this.cards[0];
         this.cards.splice(0, 1);
-        return topcard;
+        return topCard;
     }
 }
 
 
-class Models {
+class Player {
     constructor(name, position) {
         this.position = position;
         this.name = name;
@@ -192,8 +220,8 @@ class Models {
 
 class Board {
     constructor(name1, name2) {
-        this.player_left = new Models(name1, "LEFT"); //создающий комнату
-        this.player_right = new Models(name2, "RIGHT"); //бот или подключенный пользователь
+        this.player_left = new Player(name1, "LEFT");
+        this.player_right = new Player(name2, "RIGHT");
     }
 
     drawBoard() {
