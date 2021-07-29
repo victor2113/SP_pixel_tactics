@@ -7,7 +7,10 @@ canvas.height = CANVAS_HEIGHT;
 let background = new Image();
 background.src = GAME_BACKGROUND;
 
-ctx.drawImage(background, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+background.onload = function () {
+    ctx.drawImage(background, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    requestAnimationFrame(animate);
+}
 
 board = new Board("a", "b");
 
@@ -19,7 +22,6 @@ board.player_left.field.grid[0][0].object = new Homunculus();
 
 
 const mouse = new MouseControls;
-
 
 
 function updateContainers() {
@@ -51,7 +53,7 @@ function updateContainers() {
     }
 }
 
-requestAnimationFrame(animate);
+
 function animate() {
     requestAnimationFrame(animate);
 
