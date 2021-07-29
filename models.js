@@ -1,3 +1,50 @@
+class MouseControls {
+    constructor(container = document.body) {
+        this.container = container;
+
+        this.x = 0;
+        this.y = 0;
+
+        this.isPressed = false;
+        this.isDawn = false;
+        this.isUp = false;
+
+        container.addEventListener('mouseup',     event => this.changeState(event));
+        container.addEventListener('mousedown',   event => this.changeState(event));
+        container.addEventListener('mousemove',   event => this.changeState(event));
+        container.addEventListener('mousewheel',  event => this.changeState(event));
+        container.addEventListener('mouseleave',  event => this.changeState(event));
+        container.addEventListener('contextmenu', event => this.changeState(event));
+    }
+
+    changeState(event) {
+        // console.log(event.type);
+
+        this.x = event.offsetX;
+        this.y = event.offsetY;
+
+        if (event.type === 'mousedown') {
+            this.isPressed = true;
+            this.isDawn = true;
+            this.isUp = false;
+        }
+        else if (event.type === 'mouseup' || event.type === 'mouseleave') {
+            this.isPressed = false;
+            this.isDawn = false;
+            this.isUp = true;
+        }
+        else if (event.type === 'contextmenu' || event.type === 'mousewheel') {
+            event.preventDefault();
+        }
+    }
+
+    update() {
+        this.isDawn = false;
+        this.isUp = false;
+    }
+}
+
+
 /*
 
 модель карты
@@ -12,7 +59,6 @@
 id эффекта лидера
 
 */
-
 class Card {
     constructor(hp, damage, vanguardAbilityId, flankAbilityId, rearAbilityId, orderId, name) {
         this.hp = hp;
@@ -39,16 +85,34 @@ class Container {
         this.width = width;
         this.height = height;
         this.object = null;
+
+        this.isControl = false;
+        this.isPressed = false;
+        this.isSelected = false;
+
+        this.firstColor = '#00ff00';
+        this.secondColor = '#0000ff';
+        this.thirdColor = '#ff0000';
     }
 
     drawContent() {
-        if (this.object) {
-            ctx.drawImage(this.object.img, this.x, this.y, this.width, this.height)
-        }
+        if (this.object)
+            ctx.drawImage(this.object.img, this.x, this.y, this.width, this.height);
+
+        this.drawHoverLight();
     }
-
+    // пока получилась смешанная функция, позже нужно доработать
     drawHoverLight() {
+        if (this.isSelected)
+            ctx.strokeStyle = this.thirdColor;
 
+        else
+            ctx.strokeStyle = this.firstColor;
+
+        if (this.isControl)
+            ctx.strokeStyle = this.secondColor;
+
+        ctx.strokeRect(this.x, this.y, this.width, this.height);
     }
 
     drawZoom() {
