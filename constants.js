@@ -4,6 +4,9 @@ const CANVAS_HEIGHT = 628;
 const CARD_WIDTH = 92;
 const CARD_HEIGHT = 138;
 
+const CARD_PRIORITY_WIDTH = 55;
+const CARD_PRIORITY_HEIGHT = 82;
+
 const ZOOM_CARD_WIDTH = 0;
 const ZOOM_CARD_HEIGHT = 0;
 

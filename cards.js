@@ -179,3 +179,17 @@ class Summoner extends Card {
         super(5, 2, "A/4/X", "A/8", "A/12/3/X", "A/21", "summoner");
     }
 }
+
+class PriorityFirstCard{
+    constructor() {
+        this.img = new Image();
+        this.img.src = "assets/priority cards/cover card first player.png";
+    }
+}
+
+class PrioritySecondCard{
+    constructor() {
+        this.img = new Image();
+        this.img.src = "assets/priority cards/cover card second player.png";
+    }
+}

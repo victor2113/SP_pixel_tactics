@@ -240,6 +240,7 @@ class Player {
         this.field = new Field(position);
         this.deck = new Deck();
         this.discard = [];
+        this.actions = 2;
     }
 }
 
@@ -248,10 +249,31 @@ class Board {
     constructor(name1, name2) {
         this.player_left = new Player(name1, "LEFT");
         this.player_right = new Player(name2, "RIGHT");
+        this.priority = Math.random() < 0.5; //true => left player
+
+        this.priorityCards = [
+            new Container(BEGIN_LEFT_GRID_X, 0, CARD_PRIORITY_WIDTH, CARD_PRIORITY_HEIGHT),
+            new Container(BEGIN_RIGHT_GRID_X, 0, CARD_PRIORITY_WIDTH, CARD_PRIORITY_HEIGHT)
+        ];
+        this.priorityCards[0].object = new PriorityFirstCard();
+        this.priorityCards[1].object = new PrioritySecondCard();
     }
 
     drawBoard() {
         this.player_left.field.drawGrid();
         this.player_right.field.drawGrid();
+
+        if (!this.priority) {
+            this.priorityCards[0].x = BEGIN_LEFT_GRID_X;
+            this.priorityCards[1].x = BEGIN_RIGHT_GRID_X;
+
+        } else {
+            this.priorityCards[0].x = BEGIN_RIGHT_GRID_X;
+            this.priorityCards[1].x = BEGIN_LEFT_GRID_X;
+        }
+        this.priorityCards[0].drawContent();
+        this.priorityCards[1].drawContent();
+
+
     }
 }
