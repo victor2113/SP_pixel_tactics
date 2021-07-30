@@ -180,16 +180,29 @@ class Summoner extends Card {
     }
 }
 
-class PriorityFirstCard{
-    constructor() {
+class PriorityCard {
+    constructor(path, x) {
         this.img = new Image();
-        this.img.src = "assets/priority cards/cover card first player.png";
+        this.img.src = path;
+        this.x = x;
+        this.y = CARD_SMALL_Y;
+        this.width = CARD_SMALL_WIDTH;
+        this.height = CARD_SMALL_HEIGHT;
+    }
+
+    drawPriorityCard() {
+        ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
     }
 }
 
-class PrioritySecondCard{
+class PriorityFirstCard extends PriorityCard {
     constructor() {
-        this.img = new Image();
-        this.img.src = "assets/priority cards/cover card second player.png";
+        super("assets/priority cards/cover card first player.png", BEGIN_LEFT_GRID_X);
+    }
+}
+
+class PrioritySecondCard extends PriorityCard {
+    constructor() {
+        super("assets/priority cards/cover card second player.png", BEGIN_RIGHT_GRID_X);
     }
 }

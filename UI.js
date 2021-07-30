@@ -15,5 +15,5 @@ function animate() {
     board.drawBoard();
     menu.drawMenu();
     mouse.update();
-    setTimeout(animate, 1000 / 60);
+    setTimeout(animate, 1000 / 120);
 }

@@ -108,10 +108,10 @@ class Container {
             ctx.drawImage(this.object.img, this.x, this.y, this.width, this.height);
     }
 
-    // пока получилась смешанная функция, позже нужно доработать
     Hover() {
         ctx.lineWidth = 3;
         if (checkMouseCollision(this.x, this.y, this.width, this.height, mouse.x, mouse.y)) {
+            this.drawZoom();
             this.isControl = true;
             if (mouse.isDawn) {
                 console.log('container pressed');
@@ -120,7 +120,6 @@ class Container {
             } else if (this.isPressed && mouse.isUp) {
                 this.isPressed = false;
                 this.isSelected = !this.isSelected;
-                // selectedCards.push(board.player_left.field.grid[i][j]);
                 // console.log(selectedCards);
             }
 
@@ -142,7 +141,8 @@ class Container {
     }
 
     drawZoom() {
-
+        if (this.object)
+            ctx.drawImage(this.object.img, ZOOM_CARD_X, ZOOM_CARD_Y, ZOOM_CARD_WIDTH, ZOOM_CARD_HEIGHT);
     }
 }
 
@@ -270,8 +270,8 @@ class Board {
         this.priority = Math.random() < 0.5; //true => left player
 
         this.priorityCards = [
-            new Container(BEGIN_LEFT_GRID_X, 10, CARD_SMALL_WIDTH, CARD_SMALL_HEIGHT, new PriorityFirstCard()),
-            new Container(BEGIN_RIGHT_GRID_X, 10, CARD_SMALL_WIDTH, CARD_SMALL_HEIGHT, new PrioritySecondCard())
+            new PriorityFirstCard(),
+            new PrioritySecondCard()
         ];
     }
 
@@ -293,7 +293,7 @@ class Board {
             this.priorityCards[0].x = BEGIN_RIGHT_GRID_X;
             this.priorityCards[1].x = BEGIN_LEFT_GRID_X;
         }
-        this.priorityCards[0].drawContent();
-        this.priorityCards[1].drawContent();
+        this.priorityCards[0].drawPriorityCard();
+        this.priorityCards[1].drawPriorityCard();
     }
 }
