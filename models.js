@@ -124,11 +124,13 @@ class Container {
             }
             else if (this.isPressed && mouse.isUp) {
                 this.isPressed = false;
-                this.isSelected = !this.isSelected;
-                // console.log(selectedCards);
-                if (!this.isSelected) {
-                    mouse.underControl = !mouse.underControl;
-                    console.log(mouse.underControl);
+                if (this.isSelected) {
+                    this.isSelected = false;
+                    mouse.underControl = false;
+                }
+                else if (!mouse.underControl) {
+                    this.isSelected = true;
+                    mouse.underControl = true;
                 }
             }
 
@@ -171,11 +173,23 @@ class Field {
     }
 
     drawGrid() {
+        let x0, y0, x1, y1;
+        let temp = null;
+
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
                 this.grid[i][j].drawContent();
-                //     if (this.grid[i][j].isPressed )
-                // }
+                if (mouse.underControl) {
+                    if (this.grid[i][j].isPressed) {
+                        x0 = i;
+                        y0 = j;
+                    }
+                    else if (this.grid[i][j].isSelected) {
+                        x1 = i;
+                        y1 = j;
+                    }
+
+                }
             }
         }
     }
