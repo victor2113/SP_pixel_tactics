@@ -86,12 +86,12 @@ class MouseControls {
 
 
 class Container {
-    constructor(x, y, width, height) {
+    constructor(x, y, width, height, object = null) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.object = null;
+        this.object = object;
 
         this.isControl = false;
         this.isPressed = false;
@@ -174,16 +174,34 @@ class Field {
 
 class Hand {
     constructor() {
-        this.hand = []
+        this.hand = [];
+        this.x = 0;
     }
 
     add_card(card) {
-        this.hand.push(card)
+        for (let i = 0; i < card.length; i++) {
+            this.hand.push(new Container(0, CANVAS_HEIGHT - 95, CARD_SMALL_WIDTH, CARD_SMALL_HEIGHT, card[i]));
+        }
     }
 
     delete_card(index) {
         if (index >= this.hand.length) {
             this.hand.splice(index, 1);
+        }
+    }
+
+    drawHand() {
+        this.x = CANVAS_WIDTH / 2 - (this.hand.length * (CARD_SMALL_WIDTH + GRID_MARGIN)) / 2 - 7;
+
+        for (let i = 0; i < this.hand.length * X_SIZE_SMALL; i += X_SIZE_SMALL) {
+            if (!this.hand[i / X_SIZE_SMALL].object) {
+                this.hand.splice(this.hand[i / X_SIZE_SMALL], 1);
+            }
+            this.hand[i / X_SIZE_SMALL].x = this.x + i;
+        }
+
+        for (let i = 0; i < this.hand.length; i++) {
+            this.hand[i].drawContent();
         }
     }
 }
@@ -252,18 +270,22 @@ class Board {
         this.priority = Math.random() < 0.5; //true => left player
 
         this.priorityCards = [
-            new Container(BEGIN_LEFT_GRID_X, 0, CARD_PRIORITY_WIDTH, CARD_PRIORITY_HEIGHT),
-            new Container(BEGIN_RIGHT_GRID_X, 0, CARD_PRIORITY_WIDTH, CARD_PRIORITY_HEIGHT)
+            new Container(BEGIN_LEFT_GRID_X, 10, CARD_SMALL_WIDTH, CARD_SMALL_HEIGHT, new PriorityFirstCard()),
+            new Container(BEGIN_RIGHT_GRID_X, 10, CARD_SMALL_WIDTH, CARD_SMALL_HEIGHT, new PrioritySecondCard())
         ];
-        this.priorityCards[0].object = new PriorityFirstCard();
-        this.priorityCards[1].object = new PrioritySecondCard();
     }
 
     drawBoard() {
         this.player_left.field.drawGrid();
         this.player_right.field.drawGrid();
 
-        if (!this.priority) {
+        if (this.priority) {
+            this.player_left.hand.drawHand();
+        } else {
+            this.player_right.hand.drawHand();
+        }
+
+        if (this.priority) {
             this.priorityCards[0].x = BEGIN_LEFT_GRID_X;
             this.priorityCards[1].x = BEGIN_RIGHT_GRID_X;
 
@@ -273,7 +295,5 @@ class Board {
         }
         this.priorityCards[0].drawContent();
         this.priorityCards[1].drawContent();
-
-
     }
 }
