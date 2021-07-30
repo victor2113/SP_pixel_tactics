@@ -190,12 +190,38 @@ class Hand {
 
 
 class Deck {
-    constructor(cards) {
-        this.cards = cards;
+    constructor() {
+        this.cards = [
+            new Berserk(), //00
+            new Stalker(), //01
+            new Scientist(), //02
+            new Paladin(), //03
+            new Healer(), //04
+            new Shooter(), //05
+            new Fighter(), //06
+            new Homunculus(), //07
+            new Mascot(), //08
+            new Witch(), //09
+            new Huntsman(), //10
+            new Lord(), //11
+            new Mystic(), //12
+            new Pyromancer(), //13
+            new Priestess(), //14
+            new Dragon_mage(), //15
+            new Knight(), //16
+            new Illusionist(), //17
+            new Vampire(), //18
+            new Oracle(), //19
+            new Alchemist(), //20
+            new Assassin(), //21
+            new Double(), //22
+            new Templar(), //23
+            new Summoner(), //24
+        ];
     }
 
     shuffleDeck() {
-        cards.sort(() => Math.random() - 0.5);
+        this.cards.sort(() => Math.random() - 0.5);
     }
 
     drawCard() {
