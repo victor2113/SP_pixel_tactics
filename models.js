@@ -2,6 +2,7 @@ function checkMouseCollision(x, y, w, h, posX, posY) {
     return (x < posX && (x + w) > posX && y < posY && (y + h) > posY);
 }
 
+
 class Menu {
     constructor() {
         this.actions = [
@@ -40,6 +41,7 @@ class Menu {
     }
 }
 
+
 class MouseControls {
     constructor(container = document.body) {
         this.container = container;
@@ -48,8 +50,10 @@ class MouseControls {
         this.y = 0;
 
         this.isPressed = false;
-        this.isDawn = false;
+        this.isDown = false;
         this.isUp = false;
+
+        this.underControl = false;
 
         container.addEventListener('mouseup', event => this.changeState(event));
         container.addEventListener('mousedown', event => this.changeState(event));
@@ -67,11 +71,11 @@ class MouseControls {
 
         if (event.type === 'mousedown') {
             this.isPressed = true;
-            this.isDawn = true;
+            this.isDown = true;
             this.isUp = false;
         } else if (event.type === 'mouseup' || event.type === 'mouseleave') {
             this.isPressed = false;
-            this.isDawn = false;
+            this.isDown = false;
             this.isUp = true;
         } else if (event.type === 'contextmenu' || event.type === 'mousewheel') {
             event.preventDefault();
@@ -79,7 +83,7 @@ class MouseControls {
     }
 
     update() {
-        this.isDawn = false;
+        this.isDown = false;
         this.isUp = false;
     }
 }
@@ -113,14 +117,19 @@ class Container {
         if (checkMouseCollision(this.x, this.y, this.width, this.height, mouse.x, mouse.y)) {
             this.drawZoom();
             this.isControl = true;
-            if (mouse.isDawn) {
+            if (mouse.isDown) {
                 console.log('container pressed');
                 this.isPressed = true;
-
-            } else if (this.isPressed && mouse.isUp) {
+                console.log(mouse.underControl);
+            }
+            else if (this.isPressed && mouse.isUp) {
                 this.isPressed = false;
                 this.isSelected = !this.isSelected;
                 // console.log(selectedCards);
+                if (!this.isSelected) {
+                    mouse.underControl = !mouse.underControl;
+                    console.log(mouse.underControl);
+                }
             }
 
         } else {
@@ -159,13 +168,14 @@ class Field {
             for (let j = 0; j < 3 * (Y_SIZE); j += Y_SIZE)
                 this.grid[i / (X_SIZE)][j / (Y_SIZE)] = new Container(eval("BEGIN_" + position + "_GRID_X") + i, BEGIN_GRID_Y + j, CARD_WIDTH, CARD_HEIGHT)
         }
-
     }
 
     drawGrid() {
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
                 this.grid[i][j].drawContent();
+                //     if (this.grid[i][j].isPressed )
+                // }
             }
         }
     }
