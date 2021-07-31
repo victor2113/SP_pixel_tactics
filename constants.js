@@ -11,6 +11,12 @@ const CARD_SMALL_Y = 10;
 const BACKGROUND = new Image();
 BACKGROUND.src = "assets/background.png";
 
+const RED_CARD = new Image();
+RED_CARD.src = "assets/player covers/red.png";
+
+const BLUE_CARD = new Image();
+BLUE_CARD.src = "assets/player covers/blue.png";
+
 const BEGIN_GRID_Y = 100;
 const BEGIN_LEFT_GRID_X = 325;
 const BEGIN_RIGHT_GRID_X = 743;

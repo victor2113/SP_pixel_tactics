@@ -1,5 +1,4 @@
 //файл, описывающий цикл игры
-
 function changePriority() {
     if (board.priority) {
         board.player_left.actions = 2;
@@ -19,10 +18,7 @@ board.player_right.deck.shuffleDeck();
 board.player_left.hand.add_card(board.player_left.deck.cards.splice(0, 5));
 board.player_right.hand.add_card(board.player_right.deck.cards.splice(0, 5));
 
-//здесь каждому игроку нужно выбрать по одной карте из руки, которая станет лидером(перевернется)
-// и будет помещена в центр поля игрока до конца игры
-
-//пока ставлю заглушку
+//лидеры ставятся на свои места
 board.player_left.field.grid[1][1].object = new Knight();
 board.player_right.field.grid[1][1].object = new Healer();
 
@@ -34,12 +30,9 @@ board.player_right.field.grid[1][1].object = new Healer();
     //смена очередности игроков
 
 
-animate();
-
-
-
 //tests
-
 board.player_right.field.grid[2][1].object = new Shooter();
 board.player_left.field.grid[0][0].object = new Homunculus();
+
+animate();
 
