@@ -13,7 +13,6 @@ function animate() {
 
     // console.log(mouse.isDawn + ' - ' + mouse.isPressed);
     board.drawBoard();
-    menu.drawMenu();
     mouse.update();
-    setTimeout(animate, 1000 / 120);
+    setTimeout(animate, 1000 / 60);
 }

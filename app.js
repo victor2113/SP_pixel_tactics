@@ -19,11 +19,27 @@ board.player_right.deck.shuffleDeck();
 board.player_left.hand.add_card(board.player_left.deck.cards.splice(0, 5));
 board.player_right.hand.add_card(board.player_right.deck.cards.splice(0, 5));
 
+//здесь каждому игроку нужно выбрать по одной карте из руки, которая станет лидером(перевернется)
+// и будет помещена в центр поля игрока до конца игры
 
-//tests
-board.player_left.field.grid[2][1].object = new Berserk();
-board.player_right.field.grid[1][2].object = new Stalker();
-board.player_right.field.grid[2][1].object = new Dragon_mage();
-board.player_left.field.grid[0][0].object = new Homunculus();
+//пока ставлю заглушку
+board.player_left.field.grid[1][1].object = new Knight();
+board.player_right.field.grid[1][1].object = new Healer();
+
+
+//после этого начинается базовый цикл игры с иерархией:
+//  раунд:
+    //3 волны
+    //подсчет потерь
+    //смена очередности игроков
+
 
 animate();
+
+
+
+//tests
+
+board.player_right.field.grid[2][1].object = new Shooter();
+board.player_left.field.grid[0][0].object = new Homunculus();
+

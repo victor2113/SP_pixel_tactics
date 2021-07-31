@@ -9,15 +9,11 @@ class Menu {
             {title: "Взять карту из колоды", y: 0},
             {title: "Разыграть карту", y: 0},
             {title: "Атака", y: 0},
-            {title: "Заклинание", y: 0},
-            {title: "Приказ", y: 0},
-            {title: "Убрать тело", y: 0},
             {title: "Передвинуть карту", y: 0},
-            {title: "Рокировка", y: 0},
             {title: "Пас", y: 0}
         ];
-        this.index = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-        for (let i = 0; i < 9; i++) {
+        this.index = [1, 2, 3, 4, 5];
+        for (let i = 0; i < 5; i++) {
             this.actions[i].y = this.index[i] * 40;
         }
 
@@ -27,9 +23,9 @@ class Menu {
     }
 
     drawMenu() {
-        ctx.font = "32px Verdana";
+        ctx.font = "32px cursive";
         ctx.textAlign = "right";
-        for (let i = 0; i < 9; i++) {
+        for (let i = 0; i < 5; i++) {
             if (checkMouseCollision(this.x, this.actions[i].y - 40, this.width, this.height, mouse.x, mouse.y)) {
                 ctx.fillStyle = "#f59a9a";
 
@@ -101,15 +97,25 @@ class Container {
         this.isPressed = false;
         this.isSelected = false;
 
-        this.firstColor = '#00ff00';
+        this.firstColor = '#ffba2c';
         this.secondColor = '#0000ff';
         this.thirdColor = '#ff0000';
     }
 
     drawContent() {
         this.Hover();
-        if (this.object)
+        if (this.object) {
             ctx.drawImage(this.object.img, this.x, this.y, this.width, this.height);
+            ctx.font = "10px Verdana";
+            ctx.fillStyle = "white";
+            ctx.strokeStyle = "green";
+            ctx.strokeText(this.object.hp, this.x + this.width * 0.79, this.y + this.height * 0.322, this.width / 12);
+            ctx.fillText(this.object.hp, this.x + this.width * 0.79, this.y + this.height * 0.322, this.width / 12);
+            ctx.strokeStyle = "#c11717";
+            ctx.strokeText(this.object.hp, this.x + this.width * 0.79, this.y + this.height * 0.53, this.width / 12);
+            ctx.fillText(this.object.damage, this.x + this.width * 0.79, this.y + this.height * 0.53, this.width / 12);
+
+        }
     }
 
     Hover() {
@@ -120,17 +126,16 @@ class Container {
             if (mouse.isDown) {
                 console.log('container pressed');
                 this.isPressed = true;
-                console.log(mouse.underControl);
-            }
-            else if (this.isPressed && mouse.isUp) {
+            } else if (this.isPressed && mouse.isUp) {
                 this.isPressed = false;
-                if (this.isSelected) {
-                    this.isSelected = false;
-                    mouse.underControl = false;
-                }
-                else if (!mouse.underControl) {
+
+                if (!this.isSelected) {
                     this.isSelected = true;
                     mouse.underControl = true;
+
+                } else if (this.isSelected) {
+                    this.isSelected = false;
+                    mouse.underControl = false;
                 }
             }
 
@@ -152,14 +157,26 @@ class Container {
     }
 
     drawZoom() {
-        if (this.object)
+        if (this.object) {
             ctx.drawImage(this.object.img, ZOOM_CARD_X, ZOOM_CARD_Y, ZOOM_CARD_WIDTH, ZOOM_CARD_HEIGHT);
+            ctx.font = "32px serif";
+            ctx.fillStyle = "white";
+            ctx.strokeStyle = "green";
+            ctx.strokeText(this.object.hp, ZOOM_CARD_X + ZOOM_CARD_WIDTH - 60, ZOOM_CARD_Y + 133, 20);
+            ctx.fillText(this.object.hp, ZOOM_CARD_X + ZOOM_CARD_WIDTH - 60, ZOOM_CARD_Y + 133, 20);
+            ctx.strokeStyle = "#c11717";
+            ctx.strokeText(this.object.damage, ZOOM_CARD_X + ZOOM_CARD_WIDTH - 60, ZOOM_CARD_Y + 220, 20);
+            ctx.fillText(this.object.damage, ZOOM_CARD_X + ZOOM_CARD_WIDTH - 60, ZOOM_CARD_Y + 220, 20);
+        }
     }
 }
 
 
 class Field {
     constructor(position) {
+        this.buff = null;
+        this.x0 = 0;
+        this.y0 = 0;
         this.grid = [
             [null, null, null],
             [null, null, null],
@@ -173,22 +190,27 @@ class Field {
     }
 
     drawGrid() {
-        let x0, y0, x1, y1;
-        let temp = null;
-
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
                 this.grid[i][j].drawContent();
                 if (mouse.underControl) {
-                    if (this.grid[i][j].isPressed) {
-                        x0 = i;
-                        y0 = j;
-                    }
-                    else if (this.grid[i][j].isSelected) {
-                        x1 = i;
-                        y1 = j;
-                    }
+                    if (this.grid[i][j].isSelected && !this.buff) {
+                        this.x0 = i;
+                        this.y0 = j;
+                        this.buff = this.grid[i][j].object;
 
+                    } else if (this.grid[i][j].isPressed) {
+
+                        this.grid[this.x0][this.y0].object = this.grid[i][j].object;
+                        this.grid[i][j].object = this.buff;
+                        this.buff = null;
+
+
+                        this.grid[i][j].isPressed = false;
+                        this.grid[i][j].isSelected = false;
+                        this.grid[this.x0][this.y0].isSelected = false;
+                        mouse.underControl = false;
+                    }
                 }
             }
         }
@@ -234,31 +256,16 @@ class Hand {
 class Deck {
     constructor() {
         this.cards = [
-            new Berserk(), //00
-            new Stalker(), //01
-            new Scientist(), //02
-            new Paladin(), //03
-            new Healer(), //04
-            new Shooter(), //05
-            new Fighter(), //06
-            new Homunculus(), //07
-            new Mascot(), //08
-            new Witch(), //09
-            new Huntsman(), //10
-            new Lord(), //11
-            new Mystic(), //12
-            new Pyromancer(), //13
-            new Priestess(), //14
-            new Dragon_mage(), //15
-            new Knight(), //16
-            new Illusionist(), //17
-            new Vampire(), //18
-            new Oracle(), //19
-            new Alchemist(), //20
-            new Assassin(), //21
-            new Double(), //22
-            new Templar(), //23
-            new Summoner(), //24
+            new Berserk(),
+            new Stalker(),
+            new Scientist(),
+            new Paladin(),
+            new Shooter(),
+            new Fighter(),
+            new Homunculus(),
+            new Priestess(),
+            new Vampire(),
+            new Assassin(),
         ];
     }
 
@@ -289,6 +296,7 @@ class Player {
 
 class Board {
     constructor(name1, name2) {
+        this.menu = new Menu();
         this.player_left = new Player(name1, "LEFT");
         this.player_right = new Player(name2, "RIGHT");
         this.priority = Math.random() < 0.5; //true => left player
@@ -300,23 +308,28 @@ class Board {
     }
 
     drawBoard() {
+        this.menu.drawMenu();
         this.player_left.field.drawGrid();
         this.player_right.field.drawGrid();
+        ctx.font = "50px cursive";
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
 
+        ctx.fillStyle = "#ec2626";
+        ctx.fillText(this.player_left.name, BEGIN_LEFT_GRID_X + 150, BEGIN_GRID_Y - 10);
+        ctx.fillStyle = "#1782d2";
+        ctx.fillText(this.player_right.name, BEGIN_RIGHT_GRID_X + 160, BEGIN_GRID_Y - 10);
         if (this.priority) {
+            ctx.strokeText(this.player_left.name, BEGIN_LEFT_GRID_X + 150, BEGIN_GRID_Y - 10);
             this.player_left.hand.drawHand();
-        } else {
-            this.player_right.hand.drawHand();
-        }
-
-        if (this.priority) {
             this.priorityCards[0].x = BEGIN_LEFT_GRID_X;
             this.priorityCards[1].x = BEGIN_RIGHT_GRID_X;
-
         } else {
+            ctx.strokeText(this.player_right.name, BEGIN_RIGHT_GRID_X + 160, BEGIN_GRID_Y - 10);
+            this.player_right.hand.drawHand();
             this.priorityCards[0].x = BEGIN_RIGHT_GRID_X;
             this.priorityCards[1].x = BEGIN_LEFT_GRID_X;
         }
+
         this.priorityCards[0].drawPriorityCard();
         this.priorityCards[1].drawPriorityCard();
     }
