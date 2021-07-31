@@ -120,17 +120,16 @@ class Container {
             if (mouse.isDown) {
                 console.log('container pressed');
                 this.isPressed = true;
-                console.log(mouse.underControl);
-            }
-            else if (this.isPressed && mouse.isUp) {
+            } else if (this.isPressed && mouse.isUp) {
                 this.isPressed = false;
-                if (this.isSelected) {
-                    this.isSelected = false;
-                    mouse.underControl = false;
-                }
-                else if (!mouse.underControl) {
+
+                if (!this.isSelected) {
                     this.isSelected = true;
                     mouse.underControl = true;
+
+                } else if (this.isSelected) {
+                    this.isSelected = false;
+                    mouse.underControl = false;
                 }
             }
 
@@ -160,6 +159,9 @@ class Container {
 
 class Field {
     constructor(position) {
+        this.buff = null;
+        this.x0 = 0;
+        this.y0 = 0;
         this.grid = [
             [null, null, null],
             [null, null, null],
@@ -173,22 +175,27 @@ class Field {
     }
 
     drawGrid() {
-        let x0, y0, x1, y1;
-        let temp = null;
-
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
                 this.grid[i][j].drawContent();
                 if (mouse.underControl) {
-                    if (this.grid[i][j].isPressed) {
-                        x0 = i;
-                        y0 = j;
-                    }
-                    else if (this.grid[i][j].isSelected) {
-                        x1 = i;
-                        y1 = j;
-                    }
+                    if (this.grid[i][j].isSelected && !this.buff) {
+                        this.x0 = i;
+                        this.y0 = j;
+                        this.buff = this.grid[i][j].object;
 
+                    } else if (this.grid[i][j].isPressed) {
+
+                        this.grid[this.x0][this.y0].object = this.grid[i][j].object;
+                        this.grid[i][j].object = this.buff;
+                        this.buff = null;
+
+
+                        this.grid[i][j].isPressed = false;
+                        this.grid[i][j].isSelected = false;
+                        this.grid[this.x0][this.y0].isSelected = false;
+                        mouse.underControl = false;
+                    }
                 }
             }
         }
@@ -289,6 +296,7 @@ class Player {
 
 class Board {
     constructor(name1, name2) {
+        this.menu = new Menu();
         this.player_left = new Player(name1, "LEFT");
         this.player_right = new Player(name2, "RIGHT");
         this.priority = Math.random() < 0.5; //true => left player
@@ -300,6 +308,7 @@ class Board {
     }
 
     drawBoard() {
+        this.menu.drawMenu();
         this.player_left.field.drawGrid();
         this.player_right.field.drawGrid();
 
