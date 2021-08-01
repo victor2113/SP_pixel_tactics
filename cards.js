@@ -1,5 +1,5 @@
 class Card {
-    constructor(hp, damage, name, passive = null,) {
+    constructor(hp, damage, name, passive = null, ) {
         this.hp = hp;
         this.damage = damage;
         this.passive = passive;
@@ -76,7 +76,7 @@ class Knight extends Card {
 
 class Healer extends Card {
     constructor() {
-        super(4, 1, "healer", 3);
+        super(15, 1, "healer", 3);
     }
 }
 

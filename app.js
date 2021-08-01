@@ -1,4 +1,5 @@
 //файл, описывающий цикл игры
+let gameOver = true;
 
 function listenAction(i) {
     //пока ставлю заглушки
@@ -10,38 +11,44 @@ function listenAction(i) {
 
     switch (i) {
 
-        case 0: {
-            if (currentPlayer.hand.hand.length < 8 && currentPlayer.deck.cards.length > 0) {
-                currentPlayer.hand.add_card(currentPlayer.deck.cards.splice(0, 1));
-                currentPlayer.actions -= 1;
+        case 0:
+            {
+                if (currentPlayer.hand.hand.length < 8 && currentPlayer.deck.cards.length > 0) {
+                    currentPlayer.hand.add_card(currentPlayer.deck.cards.splice(0, 1));
+                    currentPlayer.actions -= 1;
 
-            } else {
-                alert("вы не можете взять карту");
+                } else {
+                    alert("вы не можете взять карту");
+                }
+                break
             }
-            break
-        }
-        case 1: {
-            alert("разыграй карту")
-            break
-        }
-        case 2: {
-            alert("выбери карту, которой будешь атаковать")
-            break
-        }
-        case 3: {
-            alert("передвинь карту")
-            break
-        }
-        case 4: {
-            board.priority = !board.priority;
-            currentPlayer.actions = 2;
-            break
-        }
+        case 1:
+            {
+                alert("разыграй карту")
+                break
+            }
+        case 2:
+            {
+                alert("выбери карту, которой будешь атаковать")
+                break
+            }
+        case 3:
+            {
+                alert("передвинь карту")
+                break
+            }
+        case 4:
+            {
+                board.priority = !board.priority;
+                currentPlayer.actions = 2;
+                break
+            }
     }
-    if (currentPlayer.actions < 1){
+    if (currentPlayer.actions < 1) {
         board.priority = !board.priority;
         currentPlayer.actions = 2;
     }
+
 }
 
 function checkPriority() {
@@ -69,17 +76,33 @@ board.player_right.hand.add_card(board.player_right.deck.cards.splice(0, 5));
 board.player_left.field.grid[1][1].object = new Knight();
 board.player_right.field.grid[1][1].object = new Healer();
 
+function checkLordsHp() {
+    let currentPlayer;
+    if (board.priority) {
+        currentPlayer = board.player_left;
 
-//после этого начинается базовый цикл игры с иерархией:
-//  раунд:
-//3 волны
-//подсчет потерь
-//смена очередности игроков
+    } else currentPlayer = board.player_right;
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            if (currentPlayer.field.grid[i][j].object == Knight || currentPlayer.field.grid[i][j].object == Healer) {
+                console.log(i);
+                if (currentPlayer.field.grid[i][j].object.hp > 0)
+                    return false;
+            }
 
+        }
+    }
+    return true;
+}
 
-//tests
+gameOver = checkLordsHp();
+//console.log(gameOver);
+
+if (gameOver) {
+    alert("Game over!");
+}
+
 board.player_right.field.grid[2][1].object = new Shooter();
 board.player_left.field.grid[0][0].object = new Homunculus();
 
 animate();
-
