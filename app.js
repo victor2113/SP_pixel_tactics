@@ -1,5 +1,5 @@
 //файл, описывающий цикл игры
-
+let gameOver = true;
 function listenAction(i) {
     //пока ставлю заглушки
     let currentPlayer;
@@ -74,6 +74,32 @@ function checkPriority() {
         board.player_right.actions = 2;
         board.priority = !board.priority;
     }
+}
+
+function checkLordsHp() {
+    let currentPlayer;
+    if (board.priority) {
+        currentPlayer = board.player_left;
+
+    } else currentPlayer = board.player_right;
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            if (currentPlayer.field.grid[i][j].object == Knight || currentPlayer.field.grid[i][j].object == Healer) {
+                console.log(i);
+                if (currentPlayer.field.grid[i][j].object.hp > 0)
+                    return false;
+            }
+
+        }
+    }
+    return true;
+}
+
+gameOver = checkLordsHp();
+//console.log(gameOver);
+
+if (gameOver) {
+    alert("Game over!");
 }
 
 
