@@ -1,37 +1,58 @@
 //файл, описывающий цикл игры
-function listenAction(i){
+
+function listenAction(i) {
     //пока ставлю заглушки
-    switch (i){
-        case 0:{
-            alert("бери карту")
+    let currentPlayer;
+    if (board.priority) {
+        currentPlayer = board.player_left;
+
+    } else currentPlayer = board.player_right;
+
+    switch (i) {
+
+        case 0: {
+            if (currentPlayer.hand.hand.length < 8 && currentPlayer.deck.cards.length > 0) {
+                currentPlayer.hand.add_card(currentPlayer.deck.cards.splice(0, 1));
+                currentPlayer.actions -= 1;
+
+            } else {
+                alert("вы не можете взять карту");
+            }
             break
         }
-        case 1:{
+        case 1: {
             alert("разыграй карту")
             break
         }
-        case 2:{
+        case 2: {
             alert("выбери карту, которой будешь атаковать")
             break
         }
-        case 3:{
+        case 3: {
             alert("передвинь карту")
             break
         }
-        case 4:{
-            alert("пас")
+        case 4: {
+            board.priority = !board.priority;
+            currentPlayer.actions = 2;
             break
         }
     }
+    if (currentPlayer.actions < 1){
+        board.priority = !board.priority;
+        currentPlayer.actions = 2;
+    }
 }
 
-function changePriority() {
-    if (board.priority) {
+function checkPriority() {
+    if (board.priority && board.player_left.actions < 1) {
         board.player_left.actions = 2;
+        board.priority = !board.priority;
+
     } else {
         board.player_right.actions = 2;
+        board.priority = !board.priority;
     }
-    board.priority = !board.priority;
 }
 
 
@@ -51,9 +72,9 @@ board.player_right.field.grid[1][1].object = new Healer();
 
 //после этого начинается базовый цикл игры с иерархией:
 //  раунд:
-    //3 волны
-    //подсчет потерь
-    //смена очередности игроков
+//3 волны
+//подсчет потерь
+//смена очередности игроков
 
 
 //tests

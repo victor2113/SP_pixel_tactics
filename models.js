@@ -27,7 +27,7 @@ class Menu {
         ctx.textAlign = "right";
         for (let i = 0; i < 5; i++) {
             if (checkMouseCollision(this.x, this.actions[i].y - 40, this.width, this.height, mouse.x, mouse.y)) {
-                if (mouse.isPressed){
+                if (mouse.isUp){
                     listenAction(i);
                 }
                 ctx.fillStyle = "#f59a9a";
