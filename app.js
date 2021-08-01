@@ -14,7 +14,6 @@ function listenAction(i) {
             if (currentPlayer.hand.hand.length < 8 && currentPlayer.deck.cards.length > 0) {
                 currentPlayer.hand.add_card(currentPlayer.deck.cards.splice(0, 1));
                 currentPlayer.actions -= 1;
-
             } else {
                 alert("Вы не можете взять карту!");
             }
@@ -22,10 +21,24 @@ function listenAction(i) {
         }
         case 1: {
             alert("Разыграйте героя.");
-            if (currentPlayer.field.countCards < 9) { "do" }
-            else {
-                alert("Вы не можете разыграть героя!");
-            }
+            // if (currentPlayer.field.countCards < 9) {
+                mouse.activeAction = 1;
+
+                if ((mouse.buffer1 && mouse.buffer2) &&
+                    (mouse.buffer1.location === "hand" && mouse.buffer2.location === "grid") && (!mouse.buffer2.object)) {
+                    let temp = mouse.buffer1.object;
+                    mouse.buffer1.object = mouse.buffer2.object;
+                    mouse.buffer2.object = temp;
+                    mouse.buffer1 = null;
+                    mouse.buffer2 = null;
+                    console.log(currentPlayer.hand.hand);
+                }
+
+                mouse.activeAction = -1;
+            // }
+            // else {
+            //     alert("Вы не можете разыграть героя!");
+            // }
             //выбрать карту из руки
             //выбрать пустую клетку своего поля
             //разыграть героя
@@ -33,7 +46,13 @@ function listenAction(i) {
         }
         case 2: {
             alert("Выберите героя, которым будете атаковать.");
-            if (currentPlayer.field.countCards > 0) { "do" }
+            if (currentPlayer.field.countCards > 0) {
+                mouse.activeAction = 2;
+
+
+
+                mouse.activeAction = -1;
+            }
             else {
                 alert("Нет доступных героев для атаки!");
             }
@@ -44,7 +63,20 @@ function listenAction(i) {
         }
         case 3: {
             alert("Переместите героя.");
-            if (currentPlayer.field.countCards > 0) { "do" }
+            if (currentPlayer.field.countCards > 0) {
+                mouse.activeAction = 3;
+                //
+                // if ((mouse.buffer1 && mouse.buffer2) &&
+                //     (mouse.buffer1.location === "hand" && mouse.buffer2.location === "grid")) {
+                //     let temp = mouse.buffer1.object;
+                //     mouse.buffer1.object = mouse.buffer2.object;
+                //     mouse.buffer2.object = temp;
+                //     mouse.buffer1 = null;
+                //     mouse.buffer2 = null;
+                // }
+
+                mouse.activeAction = -1;
+            }
             else {
                 alert("Нет доступных героев для перемещения!");
             }
@@ -76,31 +108,31 @@ function checkPriority() {
     }
 }
 
-function checkLordsHp() {
-    let currentPlayer;
-    if (board.priority) {
-        currentPlayer = board.player_left;
+// function checkLordsHp() {
+//     let currentPlayer;
+//     if (board.priority) {
+//         currentPlayer = board.player_left;
+//
+//     } else currentPlayer = board.player_right;
+//     for (let i = 0; i < 3; i++) {
+//         for (let j = 0; j < 3; j++) {
+//             if (currentPlayer.field.grid[i][j].object == Knight || currentPlayer.field.grid[i][j].object == Healer) {
+//                 console.log(i);
+//                 if (currentPlayer.field.grid[i][j].object.hp > 0)
+//                     return false;
+//             }
+//
+//         }
+//     }
+//     return true;
+// }
 
-    } else currentPlayer = board.player_right;
-    for (let i = 0; i < 3; i++) {
-        for (let j = 0; j < 3; j++) {
-            if (currentPlayer.field.grid[i][j].object == Knight || currentPlayer.field.grid[i][j].object == Healer) {
-                console.log(i);
-                if (currentPlayer.field.grid[i][j].object.hp > 0)
-                    return false;
-            }
-
-        }
-    }
-    return true;
-}
-
-gameOver = checkLordsHp();
-//console.log(gameOver);
-
-if (gameOver) {
-    alert("Game over!");
-}
+// gameOver = checkLordsHp();
+// //console.log(gameOver);
+//
+// if (gameOver) {
+//     alert("Game over!");
+// }
 
 
 board = new Board("Red", "Blue");

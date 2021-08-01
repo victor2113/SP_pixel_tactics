@@ -53,10 +53,9 @@ class MouseControls {
         this.isUp = false;
 
         this.underControl = false;
-        this.cardUnderControl = {
-            x: null,
-            y: null
-        };
+        this.buffer1 = null;
+        this.buffer2 = null;
+        this.activeAction = -1;
 
         container.addEventListener('mouseup', event => this.changeState(event));
         container.addEventListener('mousedown', event => this.changeState(event));
@@ -93,12 +92,13 @@ class MouseControls {
 
 
 class Container {
-    constructor(x, y, width, height, object = null) {
+    constructor(x, y, width, height, object = null, location = "grid") {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.object = object;
+        this.location = location;
 
         this.isControl = false;
         this.isPressed = false;
@@ -129,23 +129,8 @@ class Container {
         if (checkMouseCollision(this.x, this.y, this.width, this.height, mouse.x, mouse.y)) {
             this.drawZoom();
             this.isControl = true;
-            if (mouse.isDown) {
-                console.log('container pressed');
-                this.isPressed = true;
-            } else if (this.isPressed && mouse.isUp) {
-                this.isPressed = false;
-
-                if (!this.isSelected) {
-                    this.isSelected = true;
-                    mouse.underControl = true;
-                } else if (this.isSelected) {
-                    this.isSelected = false;
-                    mouse.underControl = false;
-                }
-            }
-
+            this.selectedState();
         } else {
-            // console.log('out container');
             this.isControl = false;
         }
 
@@ -159,6 +144,28 @@ class Container {
             ctx.strokeStyle = this.secondColor;
 
         ctx.strokeRect(this.x, this.y, this.width, this.height);
+    }
+
+    selectedState() {
+        if (mouse.isDown) {
+            this.isPressed = true;
+        } else if (this.isPressed && mouse.isUp) {
+            this.isPressed = false;
+            if (!this.isSelected) {
+                this.isSelected = true;
+                mouse.underControl = true;
+                if (!mouse.buffer1) {
+                    mouse.buffer1 = this;
+                }
+                else if (!mouse.buffer2) {
+                    mouse.buffer2 = this;
+                }
+                console.log(mouse);
+            } else {
+                this.isSelected = false;
+                mouse.underControl = false;
+            }
+        }
     }
 
     drawZoom() {
@@ -187,6 +194,7 @@ class Field {
             [null, null, null],
             [null, null, null]
         ];
+        this.countCards = 0;
 
         for (let i = 0; i < 3 * (X_SIZE); i += X_SIZE) {
             for (let j = 0; j < 3 * (Y_SIZE); j += Y_SIZE)
@@ -198,25 +206,24 @@ class Field {
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
                 this.grid[i][j].drawContent();
-                if (mouse.underControl) {
-                    if (this.grid[i][j].isSelected && !this.buff) {
-                        this.x0 = i;
-                        this.y0 = j;
-                        this.buff = this.grid[i][j].object;
-
-                    } else if (this.grid[i][j].isPressed) {
-
-                        this.grid[this.x0][this.y0].object = this.grid[i][j].object;
-                        this.grid[i][j].object = this.buff;
-                        this.buff = null;
-
-
-                        this.grid[i][j].isPressed = false;
-                        this.grid[i][j].isSelected = false;
-                        this.grid[this.x0][this.y0].isSelected = false;
-                        mouse.underControl = false;
-                    }
-                }
+                // if (mouse.underControl) {
+                //     if (this.grid[i][j].isSelected && !this.buff) {
+                //         this.x0 = i;
+                //         this.y0 = j;
+                //         this.buff = this.grid[i][j].object;
+                //
+                //     } else if (this.grid[i][j].isPressed) {
+                //
+                //         this.grid[this.x0][this.y0].object = this.grid[i][j].object;
+                //         this.grid[i][j].object = this.buff;
+                //         this.buff = null;
+                //
+                //         this.grid[i][j].isPressed = false;
+                //         this.grid[i][j].isSelected = false;
+                //         this.grid[this.x0][this.y0].isSelected = false;
+                //         mouse.underControl = false;
+                //     }
+                // }
             }
         }
     }
@@ -231,7 +238,7 @@ class Hand {
 
     add_card(card) {
         for (let i = 0; i < card.length; i++) {
-            this.hand.push(new Container(0, CANVAS_HEIGHT - 95, CARD_SMALL_WIDTH, CARD_SMALL_HEIGHT, card[i]));
+            this.hand.push(new Container(0, CANVAS_HEIGHT - 95, CARD_SMALL_WIDTH, CARD_SMALL_HEIGHT, card[i], "hand"));
         }
     }
 
@@ -246,7 +253,7 @@ class Hand {
 
         for (let i = 0; i < this.hand.length * X_SIZE_SMALL; i += X_SIZE_SMALL) {
             if (!this.hand[i / X_SIZE_SMALL].object) {
-                this.hand.splice(this.hand[i / X_SIZE_SMALL], 1);
+                this.hand.splice(i / X_SIZE_SMALL, 1);
             }
             this.hand[i / X_SIZE_SMALL].x = this.x + i;
         }
@@ -305,7 +312,6 @@ class Board {
         this.player_left = new Player(name1, "LEFT");
         this.player_right = new Player(name2, "RIGHT");
         this.priority = Math.random() < 0.5; //true => left player
-
         this.priorityCards = [
             new PriorityFirstCard(),
             new PrioritySecondCard()
@@ -338,4 +344,43 @@ class Board {
         this.priorityCards[0].drawPriorityCard();
         this.priorityCards[1].drawPriorityCard();
     }
+
+    // playHero() {
+    //     let currentPlayer;
+    //     if (board.priority) {
+    //         currentPlayer = board.player_left;
+    //
+    //     } else currentPlayer = board.player_right;
+    //
+    //     for (let k = 0; k < currentPlayer.hand.hand.length; k++) {
+    //         currentPlayer.hand.hand[k].selectedState();
+    //         if (currentPlayer.hand.hand[k].isSelected) {
+    //             for (let i = 0; i < 3; i++) {
+    //                 for (let j = 0; j < 3; j++) {
+    //                     currentPlayer.field.grid[i][j].selectedState();
+    //                     if (currentPlayer.field.grid[i][j].isPressed && !currentPlayer.field.grid[i][j].object) {
+    //                         console.log("yep");
+    //                         currentPlayer.field.grid[i][j].object = currentPlayer.hand.hand[k].object;
+    //                         currentPlayer.hand.delete_card(k);
+    //
+    //                         currentPlayer.hand.hand[k].isPressed = false;
+    //                         currentPlayer.field.grid[i][j].isPressed = false;
+    //
+    //                         mouse.isPressed = false;
+    //                         mouse.underControl = false;
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+
+    makeAttack() {
+
+    }
+
+    moveHero() {
+
+    }
+
 }
