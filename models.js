@@ -196,7 +196,7 @@ class Field {
             [null, null, null],
             [null, null, null]
         ];
-        this.countCards = 0;
+        this.countCards = 1;
 
         for (let i = 0; i < 3 * (X_SIZE); i += X_SIZE) {
             for (let j = 0; j < 3 * (Y_SIZE); j += Y_SIZE)
@@ -256,10 +256,10 @@ class Hand {
         for (let i = 0; i < this.hand.length * X_SIZE_SMALL; i += X_SIZE_SMALL) {
             if (!this.hand[i / X_SIZE_SMALL].object) {
                 this.hand.splice(i / X_SIZE_SMALL, 1);
+                break
             }
             this.hand[i / X_SIZE_SMALL].x = this.x + i;
         }
-
         for (let i = 0; i < this.hand.length; i++) {
             this.hand[i].drawContent();
         }

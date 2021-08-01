@@ -1,7 +1,6 @@
 //TODO LIST
 // 1) Прикрутить разделение сторон.
-// 2) Прикрутить счетчик героев на грид.
-// 3) Фикс лидеров в центре поля.
+// 2) Фикс лидеров в центре поля.
 
 function checkGameOver() {
     return (!board.player_left.field.grid[1][1].object || !board.player_right.field.grid[1][1].object);
@@ -24,10 +23,15 @@ function replaceContent() {
 function listenAction(i) {
 
     let currentPlayer;
+    let opposite;
     if (board.priority) {
         currentPlayer = board.player_left;
+        opposite = board.player_right
 
-    } else currentPlayer = board.player_right;
+    } else {
+        currentPlayer = board.player_right;
+        opposite = board.player_left;
+    }
 
     switch (i) {
         case 0: {
@@ -41,37 +45,31 @@ function listenAction(i) {
         }
         case 1: {
             alert("Разыграйте героя.");
-            // if (currentPlayer.field.countCards < 9) {
+            if (currentPlayer.field.countCards < 9 && currentPlayer.hand.hand.length > 0) {
                 mouse.activeAction = 1;
 
                 if ((mouse.buffer1 && mouse.buffer2) &&
                     (mouse.buffer1.location === "hand" && mouse.buffer2.location === "grid") && (!mouse.buffer2.object)) {
                     replaceContent();
-
+                    currentPlayer.field.countCards += 1;
                 }
-
-                mouse.activeAction = -1;
-
+                //mouse.activeAction = -1;
                 currentPlayer.actions -= 1;
-            // }
-            // else {
-            //     alert("Вы не можете разыграть героя!");
-            // }
-            //выбрать карту из руки
-            //выбрать пустую клетку своего поля
-            //разыграть героя
+            }
+            else {
+                alert("Вы не можете разыграть героя!");
+            }
             break;
         }
         case 2: {
             alert("Выберите героя, которым будете атаковать.");
-            // if (currentPlayer.field.countCards > 0) {
             //     mouse.activeAction = 2;
-
                 if ((mouse.buffer1 && mouse.buffer2) &&
                     (mouse.buffer1.location === "grid" && mouse.buffer2.location === "grid") &&
                     (mouse.buffer1.object && mouse.buffer2.object)) {
                     mouse.buffer2.object.hp -= mouse.buffer1.object.damage;
                     if (mouse.buffer2.object.hp <= 0) {
+                        opposite.field.countCards -= 1;
                         mouse.buffer2.object = null;
                     }
                 }
@@ -83,42 +81,30 @@ function listenAction(i) {
                     alert("Restart game?");
                     location.reload();
                 }
-
                 mouse.activeAction = -1;
-
                 currentPlayer.actions -= 1;
-            // }
-            // else {
-            //     alert("Нет доступных героев для атаки!");
-            // }
-            //выбрать героя на своем поле
-            //выбрать героя на чужом поле
-            //совершить атаку
             break;
         }
         case 3: {
             alert("Переместите героя.");
-            // if (currentPlayer.field.countCards > 0) {
-                mouse.activeAction = 3;
+            if (currentPlayer.field.countCards < 9) {
+                //mouse.activeAction = 3;
 
                 if ((mouse.buffer1 && mouse.buffer2) &&
                     (mouse.buffer1.location === "grid" && mouse.buffer2.location === "grid")) {
+                    currentPlayer.actions -= 1;
                     replaceContent();
                 }
 
-                mouse.activeAction = -1;
-            // }
-            // else {
-            //     alert("Нет доступных героев для перемещения!");
-            // }
-            //выбрать героя на своем поле
-            //выбрать другую клетку
-            //переместить героя
+                //mouse.activeAction = -1;
+            }
+            else {
+                alert("Нет доступных героев для перемещения!");
+            }
             break;
         }
         case 4: {
-            board.priority = !board.priority;
-            currentPlayer.actions = 2;
+            currentPlayer.actions -= 2;
             break;
         }
     }
@@ -143,8 +129,8 @@ board.player_left.field.grid[1][1].object = new Knight();
 board.player_right.field.grid[1][1].object = new Healer();
 
 //tests
-board.player_right.field.grid[2][1].object = new Shooter();
-board.player_left.field.grid[0][0].object = new Homunculus();
+// board.player_right.field.grid[2][1].object = new Shooter();
+// board.player_left.field.grid[0][0].object = new Homunculus();
 
 animate();
 
