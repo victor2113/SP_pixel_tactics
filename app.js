@@ -1,4 +1,30 @@
 //файл, описывающий цикл игры
+function listenAction(i){
+    //пока ставлю заглушки
+    switch (i){
+        case 0:{
+            alert("бери карту")
+            break
+        }
+        case 1:{
+            alert("разыграй карту")
+            break
+        }
+        case 2:{
+            alert("выбери карту, которой будешь атаковать")
+            break
+        }
+        case 3:{
+            alert("передвинь карту")
+            break
+        }
+        case 4:{
+            alert("пас")
+            break
+        }
+    }
+}
+
 function changePriority() {
     if (board.priority) {
         board.player_left.actions = 2;
