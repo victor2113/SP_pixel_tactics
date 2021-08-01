@@ -1,5 +1,17 @@
 //файл, описывающий цикл игры
 let gameOver = true;
+
+function replaceContent() {
+    let temp = mouse.buffer1.object;
+    mouse.buffer1.object = mouse.buffer2.object;
+    mouse.buffer2.object = temp;
+
+    mouse.buffer1.isSelected = false;
+    mouse.buffer2.isSelected = false;
+    mouse.buffer1 = null;
+    mouse.buffer2 = null;
+}
+
 function listenAction(i) {
     //пока ставлю заглушки
     let currentPlayer;
@@ -26,12 +38,7 @@ function listenAction(i) {
 
                 if ((mouse.buffer1 && mouse.buffer2) &&
                     (mouse.buffer1.location === "hand" && mouse.buffer2.location === "grid") && (!mouse.buffer2.object)) {
-                    let temp = mouse.buffer1.object;
-                    mouse.buffer1.object = mouse.buffer2.object;
-                    mouse.buffer2.object = temp;
-                    mouse.buffer1 = null;
-                    mouse.buffer2 = null;
-                    console.log(currentPlayer.hand.hand);
+                    replaceContent();
                 }
 
                 mouse.activeAction = -1;
@@ -63,23 +70,19 @@ function listenAction(i) {
         }
         case 3: {
             alert("Переместите героя.");
-            if (currentPlayer.field.countCards > 0) {
+            // if (currentPlayer.field.countCards > 0) {
                 mouse.activeAction = 3;
-                //
-                // if ((mouse.buffer1 && mouse.buffer2) &&
-                //     (mouse.buffer1.location === "hand" && mouse.buffer2.location === "grid")) {
-                //     let temp = mouse.buffer1.object;
-                //     mouse.buffer1.object = mouse.buffer2.object;
-                //     mouse.buffer2.object = temp;
-                //     mouse.buffer1 = null;
-                //     mouse.buffer2 = null;
-                // }
 
-                mouse.activeAction = -1;
-            }
-            else {
-                alert("Нет доступных героев для перемещения!");
-            }
+                if ((mouse.buffer1 && mouse.buffer2) &&
+                    (mouse.buffer1.location === "grid" && mouse.buffer2.location === "grid")) {
+                    replaceContent();
+                }
+
+            //     mouse.activeAction = -1;
+            // }
+            // else {
+            //     alert("Нет доступных героев для перемещения!");
+            // }
             //выбрать героя на своем поле
             //выбрать другую клетку
             //переместить героя
