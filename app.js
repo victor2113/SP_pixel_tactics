@@ -95,12 +95,6 @@ function checkLordsHp() {
     return true;
 }
 
-gameOver = checkLordsHp();
-//console.log(gameOver);
-
-if (gameOver) {
-    alert("Game over!");
-}
 
 
 board = new Board("Red", "Blue");
@@ -122,6 +116,12 @@ board.player_right.field.grid[1][1].object = new Healer();
 //3 волны
 //подсчет потерь
 //смена очередности игроков
+gameOver = checkLordsHp();
+//console.log(gameOver);
+
+if (gameOver) {
+    alert("Game over!");
+}
 
 
 //tests
