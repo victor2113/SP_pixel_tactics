@@ -22,7 +22,7 @@ function listenAction(i) {
         }
         case 1: {
             alert("Разыграйте героя.");
-            if (currentPlayer.field.countCards < 9) { do }
+            if (currentPlayer.field.countCards < 9) { "do" }
             else {
                 alert("Вы не можете разыграть героя!");
             }
@@ -33,7 +33,7 @@ function listenAction(i) {
         }
         case 2: {
             alert("Выберите героя, которым будете атаковать.");
-            if (currentPlayer.field.countCards > 0) { do }
+            if (currentPlayer.field.countCards > 0) { "do" }
             else {
                 alert("Нет доступных героев для атаки!");
             }
@@ -44,7 +44,7 @@ function listenAction(i) {
         }
         case 3: {
             alert("Переместите героя.");
-            if (currentPlayer.field.countCards > 0) { do }
+            if (currentPlayer.field.countCards > 0) { "do" }
             else {
                 alert("Нет доступных героев для перемещения!");
             }
