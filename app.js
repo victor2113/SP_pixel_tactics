@@ -85,7 +85,6 @@ function checkLordsHp() {
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
             if (currentPlayer.field.grid[i][j].object == Knight || currentPlayer.field.grid[i][j].object == Healer) {
-                console.log(i);
                 if (currentPlayer.field.grid[i][j].object.hp > 0)
                     return false;
             }
@@ -96,8 +95,6 @@ function checkLordsHp() {
 }
 
 gameOver = checkLordsHp();
-//console.log(gameOver);
-
 if (gameOver) {
     alert("Game over!");
 }
