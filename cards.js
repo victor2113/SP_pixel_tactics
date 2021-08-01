@@ -1,8 +1,7 @@
 class Card {
-    constructor(hp, damage, name, passive = null, ) {
+    constructor(hp, damage, name) {
         this.hp = hp;
         this.damage = damage;
-        this.passive = passive;
         this.img = new Image();
         this.img.src = "assets/deck/" + name + ".png"
     }
@@ -10,7 +9,7 @@ class Card {
 
 class Berserk extends Card {
     constructor() {
-        super(8, 3, "berserk", 1);
+        super(8, 3, "berserk");
     }
 }
 
@@ -28,19 +27,19 @@ class Scientist extends Card {
 
 class Paladin extends Card {
     constructor() {
-        super(6, 4, "paladin", 0);
+        super(6, 4, "paladin");
     }
 }
 
 class Shooter extends Card {
     constructor() {
-        super(4, 5, "shooter", 0);
+        super(4, 5, "shooter");
     }
 }
 
 class Fighter extends Card {
     constructor() {
-        super(8, 4, "fighter", 0);
+        super(8, 4, "fighter");
     }
 }
 
@@ -52,13 +51,13 @@ class Homunculus extends Card {
 
 class Priestess extends Card {
     constructor() {
-        super(7, 1, "priestess", 1);
+        super(7, 1, "priestess");
     }
 }
 
 class Vampire extends Card {
     constructor() {
-        super(6, 2, "vampire", 1);
+        super(6, 2, "vampire");
     }
 }
 
@@ -70,13 +69,13 @@ class Assassin extends Card {
 
 class Knight extends Card {
     constructor() {
-        super(10, 3, "knight", 2);
+        super(10, 3, "knight");
     }
 }
 
 class Healer extends Card {
     constructor() {
-        super(15, 1, "healer", 3);
+        super(15, 1, "healer");
     }
 }
 

@@ -118,11 +118,11 @@ class Container {
             ctx.font = "10px Verdana";
             ctx.fillStyle = "white";
             ctx.strokeStyle = "green";
-            ctx.strokeText(this.object.hp, this.x + this.width * 0.79, this.y + this.height * 0.322, this.width / 12);
-            ctx.fillText(this.object.hp, this.x + this.width * 0.79, this.y + this.height * 0.322, this.width / 12);
+            ctx.strokeText(this.object.hp, this.x + this.width * 0.4, this.y + this.height * 0.884, this.width / 12);
+            ctx.fillText(this.object.hp, this.x + this.width * 0.4, this.y + this.height * 0.884, this.width / 12);
             ctx.strokeStyle = "#c11717";
-            ctx.strokeText(this.object.hp, this.x + this.width * 0.79, this.y + this.height * 0.53, this.width / 12);
-            ctx.fillText(this.object.damage, this.x + this.width * 0.79, this.y + this.height * 0.53, this.width / 12);
+            ctx.strokeText(this.object.damage, this.x + this.width * 0.65, this.y + this.height * 0.884, this.width / 12);
+            ctx.fillText(this.object.damage, this.x + this.width * 0.65, this.y + this.height * 0.884, this.width / 12);
         }
     }
 
@@ -176,11 +176,11 @@ class Container {
             ctx.font = "32px serif";
             ctx.fillStyle = "white";
             ctx.strokeStyle = "green";
-            ctx.strokeText(this.object.hp, ZOOM_CARD_X + ZOOM_CARD_WIDTH - 60, ZOOM_CARD_Y + 133, 20);
-            ctx.fillText(this.object.hp, ZOOM_CARD_X + ZOOM_CARD_WIDTH - 60, ZOOM_CARD_Y + 133, 20);
+            ctx.strokeText(this.object.hp, ZOOM_CARD_X + 113, ZOOM_CARD_Y + ZOOM_CARD_HEIGHT - 50, 20);
+            ctx.fillText(this.object.hp, ZOOM_CARD_X + 113, ZOOM_CARD_Y + ZOOM_CARD_HEIGHT - 50, 20);
             ctx.strokeStyle = "#c11717";
-            ctx.strokeText(this.object.damage, ZOOM_CARD_X + ZOOM_CARD_WIDTH - 60, ZOOM_CARD_Y + 220, 20);
-            ctx.fillText(this.object.damage, ZOOM_CARD_X + ZOOM_CARD_WIDTH - 60, ZOOM_CARD_Y + 220, 20);
+            ctx.strokeText(this.object.damage, ZOOM_CARD_X + 180, ZOOM_CARD_Y + ZOOM_CARD_HEIGHT - 50, 20);
+            ctx.fillText(this.object.damage, ZOOM_CARD_X + 180, ZOOM_CARD_Y + ZOOM_CARD_HEIGHT - 50, 20);
         }
     }
 }
