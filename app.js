@@ -16,26 +16,47 @@ function listenAction(i) {
                 currentPlayer.actions -= 1;
 
             } else {
-                alert("вы не можете взять карту");
+                alert("Вы не можете взять карту!");
             }
-            break
+            break;
         }
         case 1: {
-            alert("разыграй карту")
-            break
+            alert("Разыграйте героя.");
+            if (currentPlayer.field.countCards < 9) { do }
+            else {
+                alert("Вы не можете разыграть героя!");
+            }
+            //выбрать карту из руки
+            //выбрать пустую клетку своего поля
+            //разыграть героя
+            break;
         }
         case 2: {
-            alert("выбери карту, которой будешь атаковать")
-            break
+            alert("Выберите героя, которым будете атаковать.");
+            if (currentPlayer.field.countCards > 0) { do }
+            else {
+                alert("Нет доступных героев для атаки!");
+            }
+            //выбрать героя на своем поле
+            //выбрать героя на чужом поле
+            //совершить атаку
+            break;
         }
         case 3: {
-            alert("передвинь карту")
-            break
+            alert("Переместите героя.");
+            if (currentPlayer.field.countCards > 0) { do }
+            else {
+                alert("Нет доступных героев для перемещения!");
+            }
+            //выбрать героя на своем поле
+            //выбрать другую клетку
+            //переместить героя
+            break;
         }
         case 4: {
             board.priority = !board.priority;
             currentPlayer.actions = 2;
-            break
+            break;
         }
     }
     if (currentPlayer.actions < 1){

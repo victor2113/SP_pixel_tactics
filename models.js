@@ -6,10 +6,10 @@ function checkMouseCollision(x, y, w, h, posX, posY) {
 class Menu {
     constructor() {
         this.actions = [
-            {title: "Взять карту из колоды", y: 0},
-            {title: "Разыграть карту", y: 0},
-            {title: "Атака", y: 0},
-            {title: "Передвинуть карту", y: 0},
+            {title: "Взять карту", y: 0},
+            {title: "Разыграть героя", y: 0},
+            {title: "Провести атаку", y: 0},
+            {title: "Переместить героя", y: 0},
             {title: "Пас", y: 0}
         ];
         this.index = [1, 2, 3, 4, 5];
@@ -53,6 +53,10 @@ class MouseControls {
         this.isUp = false;
 
         this.underControl = false;
+        this.cardUnderControl = {
+            x: null,
+            y: null
+        };
 
         container.addEventListener('mouseup', event => this.changeState(event));
         container.addEventListener('mousedown', event => this.changeState(event));
@@ -117,7 +121,6 @@ class Container {
             ctx.strokeStyle = "#c11717";
             ctx.strokeText(this.object.hp, this.x + this.width * 0.79, this.y + this.height * 0.53, this.width / 12);
             ctx.fillText(this.object.damage, this.x + this.width * 0.79, this.y + this.height * 0.53, this.width / 12);
-
         }
     }
 
@@ -135,7 +138,6 @@ class Container {
                 if (!this.isSelected) {
                     this.isSelected = true;
                     mouse.underControl = true;
-
                 } else if (this.isSelected) {
                     this.isSelected = false;
                     mouse.underControl = false;
