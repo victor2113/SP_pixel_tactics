@@ -76,6 +76,25 @@ function checkPriority() {
     }
 }
 
+
+
+
+board = new Board("Red", "Blue");
+menu = new Menu();
+
+board.player_left.deck.shuffleDeck();
+board.player_right.deck.shuffleDeck();
+
+board.player_left.hand.add_card(board.player_left.deck.cards.splice(0, 5));
+board.player_right.hand.add_card(board.player_right.deck.cards.splice(0, 5));
+
+//лидеры ставятся на свои места
+board.player_left.field.grid[1][1].object = new Knight();
+board.player_right.field.grid[1][1].object = new Healer();
+
+
+
+
 function checkLordsHp() {
     let currentPlayer;
     if (board.priority) {
@@ -95,27 +114,6 @@ function checkLordsHp() {
     return true;
 }
 
-
-
-board = new Board("Red", "Blue");
-menu = new Menu();
-
-board.player_left.deck.shuffleDeck();
-board.player_right.deck.shuffleDeck();
-
-board.player_left.hand.add_card(board.player_left.deck.cards.splice(0, 5));
-board.player_right.hand.add_card(board.player_right.deck.cards.splice(0, 5));
-
-//лидеры ставятся на свои места
-board.player_left.field.grid[1][1].object = new Knight();
-board.player_right.field.grid[1][1].object = new Healer();
-
-
-//после этого начинается базовый цикл игры с иерархией:
-//  раунд:
-//3 волны
-//подсчет потерь
-//смена очередности игроков
 gameOver = checkLordsHp();
 //console.log(gameOver);
 
