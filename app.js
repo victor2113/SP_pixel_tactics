@@ -1,3 +1,9 @@
+//TODO LIST
+// 1) Убрать пассивки.
+// 2) Прикрутить разделение сторон.
+// 3) Прикрутить счетчик героев на грид.
+// 4) Фикс лидеров в центре поля.
+
 function checkGameOver() {
     return (!board.player_left.field.grid[1][1].object || !board.player_right.field.grid[1][1].object);
 }
@@ -26,7 +32,7 @@ function listenAction(i) {
 
     switch (i) {
         case 0: {
-            if (currentPlayer.hand.hand.length < 8 && currentPlayer.deck.cards.length > 0) {
+            if (currentPlayer.hand.hand.length < 5 && currentPlayer.deck.cards.length > 0) {
                 currentPlayer.hand.add_card(currentPlayer.deck.cards.splice(0, 1));
                 currentPlayer.actions -= 1;
             } else {
@@ -42,9 +48,12 @@ function listenAction(i) {
                 if ((mouse.buffer1 && mouse.buffer2) &&
                     (mouse.buffer1.location === "hand" && mouse.buffer2.location === "grid") && (!mouse.buffer2.object)) {
                     replaceContent();
+
                 }
 
                 mouse.activeAction = -1;
+
+                currentPlayer.actions -= 1;
             // }
             // else {
             //     alert("Вы не можете разыграть героя!");
@@ -77,6 +86,8 @@ function listenAction(i) {
                 }
 
                 mouse.activeAction = -1;
+
+                currentPlayer.actions -= 1;
             // }
             // else {
             //     alert("Нет доступных героев для атаки!");
@@ -115,17 +126,6 @@ function listenAction(i) {
     if (currentPlayer.actions < 1){
         board.priority = !board.priority;
         currentPlayer.actions = 2;
-    }
-}
-
-function checkPriority() {
-    if (board.priority && board.player_left.actions < 1) {
-        board.player_left.actions = 2;
-        board.priority = !board.priority;
-
-    } else {
-        board.player_right.actions = 2;
-        board.priority = !board.priority;
     }
 }
 
