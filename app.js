@@ -1,19 +1,23 @@
-//файл, описывающий цикл игры
-let gameOver = true;
+function checkGameOver() {
+    return (!board.player_left.field.grid[1][1].object || !board.player_right.field.grid[1][1].object);
+}
 
-function replaceContent() {
-    let temp = mouse.buffer1.object;
-    mouse.buffer1.object = mouse.buffer2.object;
-    mouse.buffer2.object = temp;
-
+function resetBuffer() {
     mouse.buffer1.isSelected = false;
     mouse.buffer2.isSelected = false;
     mouse.buffer1 = null;
     mouse.buffer2 = null;
 }
 
+function replaceContent() {
+    let temp = mouse.buffer1.object;
+    mouse.buffer1.object = mouse.buffer2.object;
+    mouse.buffer2.object = temp;
+    resetBuffer();
+}
+
 function listenAction(i) {
-    //пока ставлю заглушки
+
     let currentPlayer;
     if (board.priority) {
         currentPlayer = board.player_left;
@@ -21,7 +25,6 @@ function listenAction(i) {
     } else currentPlayer = board.player_right;
 
     switch (i) {
-
         case 0: {
             if (currentPlayer.hand.hand.length < 8 && currentPlayer.deck.cards.length > 0) {
                 currentPlayer.hand.add_card(currentPlayer.deck.cards.splice(0, 1));
@@ -53,16 +56,31 @@ function listenAction(i) {
         }
         case 2: {
             alert("Выберите героя, которым будете атаковать.");
-            if (currentPlayer.field.countCards > 0) {
-                mouse.activeAction = 2;
+            // if (currentPlayer.field.countCards > 0) {
+            //     mouse.activeAction = 2;
 
+                if ((mouse.buffer1 && mouse.buffer2) &&
+                    (mouse.buffer1.location === "grid" && mouse.buffer2.location === "grid") &&
+                    (mouse.buffer1.object && mouse.buffer2.object)) {
+                    mouse.buffer2.object.hp -= mouse.buffer1.object.damage;
+                    if (mouse.buffer2.object.hp <= 0) {
+                        mouse.buffer2.object = null;
+                    }
+                }
 
+                resetBuffer();
+
+                if (checkGameOver()) {
+                    alert("Game over!");
+                    alert("Restart game?");
+                    location.reload();
+                }
 
                 mouse.activeAction = -1;
-            }
-            else {
-                alert("Нет доступных героев для атаки!");
-            }
+            // }
+            // else {
+            //     alert("Нет доступных героев для атаки!");
+            // }
             //выбрать героя на своем поле
             //выбрать героя на чужом поле
             //совершить атаку
@@ -78,7 +96,7 @@ function listenAction(i) {
                     replaceContent();
                 }
 
-            //     mouse.activeAction = -1;
+                mouse.activeAction = -1;
             // }
             // else {
             //     alert("Нет доступных героев для перемещения!");
@@ -111,32 +129,6 @@ function checkPriority() {
     }
 }
 
-// function checkLordsHp() {
-//     let currentPlayer;
-//     if (board.priority) {
-//         currentPlayer = board.player_left;
-//
-//     } else currentPlayer = board.player_right;
-//     for (let i = 0; i < 3; i++) {
-//         for (let j = 0; j < 3; j++) {
-//             if (currentPlayer.field.grid[i][j].object == Knight || currentPlayer.field.grid[i][j].object == Healer) {
-//                 console.log(i);
-//                 if (currentPlayer.field.grid[i][j].object.hp > 0)
-//                     return false;
-//             }
-//
-//         }
-//     }
-//     return true;
-// }
-
-// gameOver = checkLordsHp();
-// //console.log(gameOver);
-//
-// if (gameOver) {
-//     alert("Game over!");
-// }
-
 
 board = new Board("Red", "Blue");
 menu = new Menu();
@@ -150,14 +142,6 @@ board.player_right.hand.add_card(board.player_right.deck.cards.splice(0, 5));
 //лидеры ставятся на свои места
 board.player_left.field.grid[1][1].object = new Knight();
 board.player_right.field.grid[1][1].object = new Healer();
-
-
-//после этого начинается базовый цикл игры с иерархией:
-//  раунд:
-//3 волны
-//подсчет потерь
-//смена очередности игроков
-
 
 //tests
 board.player_right.field.grid[2][1].object = new Shooter();

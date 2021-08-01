@@ -22,12 +22,14 @@ class Menu {
         this.height = 40;
     }
 
+    //меню срабатывает, когда мышь покидает пределы канваса
     drawMenu() {
         ctx.font = "32px cursive";
         ctx.textAlign = "right";
+
         for (let i = 0; i < 5; i++) {
             if (checkMouseCollision(this.x, this.actions[i].y - 40, this.width, this.height, mouse.x, mouse.y)) {
-                if (mouse.isUp){
+                if (mouse.isUp) {
                     listenAction(i);
                 }
                 ctx.fillStyle = "#f59a9a";
@@ -300,7 +302,6 @@ class Player {
         this.hand = new Hand();
         this.field = new Field(position);
         this.deck = new Deck();
-        this.discard = [];
         this.actions = 2;
     }
 }
