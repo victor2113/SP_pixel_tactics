@@ -18,8 +18,8 @@ const BLUE_CARD = new Image();
 BLUE_CARD.src = "assets/player covers/blue.png";
 
 const BEGIN_GRID_Y = 100;
-const BEGIN_LEFT_GRID_X = 325;
-const BEGIN_RIGHT_GRID_X = 743;
+const BEGIN_left_GRID_X = 325;
+const BEGIN_right_GRID_X = 743;
 const GRID_MARGIN = 5;
 
 const ZOOM_CARD_X = 30;

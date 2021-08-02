@@ -22,7 +22,6 @@ class Menu {
         this.height = 40;
     }
 
-    //меню срабатывает, когда мышь покидает пределы канваса
     drawMenu() {
         ctx.font = "32px cursive";
         ctx.textAlign = "right";
@@ -57,7 +56,6 @@ class MouseControls {
         this.underControl = false;
         this.buffer1 = null;
         this.buffer2 = null;
-        this.activeAction = -1;
 
         container.addEventListener('mouseup', event => this.changeState(event));
         container.addEventListener('mousedown', event => this.changeState(event));
@@ -68,8 +66,6 @@ class MouseControls {
     }
 
     changeState(event) {
-        // console.log(event.type);
-
         this.x = event.offsetX;
         this.y = event.offsetY;
 
@@ -94,13 +90,14 @@ class MouseControls {
 
 
 class Container {
-    constructor(x, y, width, height, object = null, location = "grid") {
+    constructor(x, y, width, height, side, object = null, location = "grid") {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.object = object;
         this.location = location;
+        this.side = side;
 
         this.isControl = false;
         this.isPressed = false;
@@ -118,11 +115,11 @@ class Container {
             ctx.font = "10px Verdana";
             ctx.fillStyle = "white";
             ctx.strokeStyle = "green";
-            ctx.strokeText(this.object.hp, this.x + this.width * 0.4, this.y + this.height * 0.884, this.width / 12);
-            ctx.fillText(this.object.hp, this.x + this.width * 0.4, this.y + this.height * 0.884, this.width / 12);
+            ctx.strokeText(this.object.hp, this.x + this.width * 0.34, this.y + this.height * 0.884, this.width / 12);
+            ctx.fillText(this.object.hp, this.x + this.width * 0.34, this.y + this.height * 0.884, this.width / 12);
             ctx.strokeStyle = "#c11717";
-            ctx.strokeText(this.object.damage, this.x + this.width * 0.65, this.y + this.height * 0.884, this.width / 12);
-            ctx.fillText(this.object.damage, this.x + this.width * 0.65, this.y + this.height * 0.884, this.width / 12);
+            ctx.strokeText(this.object.damage, this.x + this.width * 0.58, this.y + this.height * 0.884, this.width / 12);
+            ctx.fillText(this.object.damage, this.x + this.width * 0.58, this.y + this.height * 0.884, this.width / 12);
         }
     }
 
@@ -158,8 +155,7 @@ class Container {
                 mouse.underControl = true;
                 if (!mouse.buffer1) {
                     mouse.buffer1 = this;
-                }
-                else if (!mouse.buffer2) {
+                } else if (!mouse.buffer2) {
                     mouse.buffer2 = this;
                 }
                 console.log(mouse);
@@ -176,21 +172,18 @@ class Container {
             ctx.font = "32px serif";
             ctx.fillStyle = "white";
             ctx.strokeStyle = "green";
-            ctx.strokeText(this.object.hp, ZOOM_CARD_X + 113, ZOOM_CARD_Y + ZOOM_CARD_HEIGHT - 50, 20);
-            ctx.fillText(this.object.hp, ZOOM_CARD_X + 113, ZOOM_CARD_Y + ZOOM_CARD_HEIGHT - 50, 20);
+            ctx.strokeText(this.object.hp, ZOOM_CARD_X + 97, ZOOM_CARD_Y + ZOOM_CARD_HEIGHT - 50, 20);
+            ctx.fillText(this.object.hp, ZOOM_CARD_X + 97, ZOOM_CARD_Y + ZOOM_CARD_HEIGHT - 50, 20);
             ctx.strokeStyle = "#c11717";
-            ctx.strokeText(this.object.damage, ZOOM_CARD_X + 180, ZOOM_CARD_Y + ZOOM_CARD_HEIGHT - 50, 20);
-            ctx.fillText(this.object.damage, ZOOM_CARD_X + 180, ZOOM_CARD_Y + ZOOM_CARD_HEIGHT - 50, 20);
+            ctx.strokeText(this.object.damage, ZOOM_CARD_X + 165, ZOOM_CARD_Y + ZOOM_CARD_HEIGHT - 50, 20);
+            ctx.fillText(this.object.damage, ZOOM_CARD_X + 165, ZOOM_CARD_Y + ZOOM_CARD_HEIGHT - 50, 20);
         }
     }
 }
 
 
 class Field {
-    constructor(position) {
-        this.buff = null;
-        this.x0 = 0;
-        this.y0 = 0;
+    constructor(side) {
         this.grid = [
             [null, null, null],
             [null, null, null],
@@ -200,7 +193,7 @@ class Field {
 
         for (let i = 0; i < 3 * (X_SIZE); i += X_SIZE) {
             for (let j = 0; j < 3 * (Y_SIZE); j += Y_SIZE)
-                this.grid[i / (X_SIZE)][j / (Y_SIZE)] = new Container(eval("BEGIN_" + position + "_GRID_X") + i, BEGIN_GRID_Y + j, CARD_WIDTH, CARD_HEIGHT)
+                this.grid[i / (X_SIZE)][j / (Y_SIZE)] = new Container(eval("BEGIN_" + side + "_GRID_X") + i, BEGIN_GRID_Y + j, CARD_WIDTH, CARD_HEIGHT, side)
         }
     }
 
@@ -208,24 +201,6 @@ class Field {
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
                 this.grid[i][j].drawContent();
-                // if (mouse.underControl) {
-                //     if (this.grid[i][j].isSelected && !this.buff) {
-                //         this.x0 = i;
-                //         this.y0 = j;
-                //         this.buff = this.grid[i][j].object;
-                //
-                //     } else if (this.grid[i][j].isPressed) {
-                //
-                //         this.grid[this.x0][this.y0].object = this.grid[i][j].object;
-                //         this.grid[i][j].object = this.buff;
-                //         this.buff = null;
-                //
-                //         this.grid[i][j].isPressed = false;
-                //         this.grid[i][j].isSelected = false;
-                //         this.grid[this.x0][this.y0].isSelected = false;
-                //         mouse.underControl = false;
-                //     }
-                // }
             }
         }
     }
@@ -233,20 +208,15 @@ class Field {
 
 
 class Hand {
-    constructor() {
+    constructor(side) {
         this.hand = [];
         this.x = 0;
+        this.side = side;
     }
 
     add_card(card) {
         for (let i = 0; i < card.length; i++) {
-            this.hand.push(new Container(0, CANVAS_HEIGHT - 95, CARD_SMALL_WIDTH, CARD_SMALL_HEIGHT, card[i], "hand"));
-        }
-    }
-
-    delete_card(index) {
-        if (index >= this.hand.length) {
-            this.hand.splice(index, 1);
+            this.hand.push(new Container(0, CANVAS_HEIGHT - 95, CARD_SMALL_WIDTH, CARD_SMALL_HEIGHT, this.side, card[i], "hand"));
         }
     }
 
@@ -286,23 +256,33 @@ class Deck {
     shuffleDeck() {
         this.cards.sort(() => Math.random() - 0.5);
     }
-
-    drawCard() {
-        let topCard = this.cards[0];
-        this.cards.splice(0, 1);
-        return topCard;
-    }
 }
 
 
 class Player {
-    constructor(name, position) {
-        this.position = position;
+    constructor(name, side) {
         this.name = name;
-        this.hand = new Hand();
-        this.field = new Field(position);
+        this.hand = new Hand(side);
+        this.field = new Field(side);
         this.deck = new Deck();
         this.actions = 2;
+        this.side = side;
+    }
+
+    drawActions(){
+        ctx.font = "50px cursive";
+        if (this.side === "left"){
+            ctx.fillStyle = "#de1e1e";
+            ctx.strokeStyle = "#000000";
+            ctx.strokeText(this.actions.toString(), 451, CANVAS_HEIGHT - 35);
+            ctx.fillText(this.actions.toString(), 451, CANVAS_HEIGHT - 35);
+        }
+        if (this.side === "right"){
+            ctx.fillStyle = "#236ce0";
+            ctx.strokeStyle = "#000000";
+            ctx.strokeText(this.actions.toString(), 873, CANVAS_HEIGHT - 35);
+            ctx.fillText(this.actions.toString(), 873, CANVAS_HEIGHT - 35);
+        }
     }
 }
 
@@ -310,8 +290,8 @@ class Player {
 class Board {
     constructor(name1, name2) {
         this.menu = new Menu();
-        this.player_left = new Player(name1, "LEFT");
-        this.player_right = new Player(name2, "RIGHT");
+        this.player_left = new Player(name1, "left");
+        this.player_right = new Player(name2, "right");
         this.priority = Math.random() < 0.5; //true => left player
         this.priorityCards = [
             new PriorityFirstCard(),
@@ -321,67 +301,34 @@ class Board {
 
     drawBoard() {
         this.menu.drawMenu();
-        this.player_left.field.drawGrid();
-        this.player_right.field.drawGrid();
-        ctx.font = "50px cursive";
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
 
-        ctx.fillStyle = "#ec2626";
-        ctx.fillText(this.player_left.name, BEGIN_LEFT_GRID_X + 150, BEGIN_GRID_Y - 10);
-        ctx.fillStyle = "#1782d2";
-        ctx.fillText(this.player_right.name, BEGIN_RIGHT_GRID_X + 160, BEGIN_GRID_Y - 10);
+        ctx.textAlign = "left";
+        ctx.font = "50px cursive";
+        ctx.strokeStyle = "rgba(2,0,0,0.6)";
+        ctx.fillStyle = "#de1e1e";
+        ctx.fillText(this.player_left.name, BEGIN_left_GRID_X + 60, BEGIN_GRID_Y - 20);
+        ctx.fillStyle = "#236ce0";
+        ctx.fillText(this.player_right.name, BEGIN_right_GRID_X + 60, BEGIN_GRID_Y - 20);
+
         if (this.priority) {
-            ctx.strokeText(this.player_left.name, BEGIN_LEFT_GRID_X + 150, BEGIN_GRID_Y - 10);
+            ctx.strokeText(this.player_left.name, BEGIN_left_GRID_X + 60, BEGIN_GRID_Y - 20);
             this.player_left.hand.drawHand();
-            this.priorityCards[0].x = BEGIN_LEFT_GRID_X;
-            this.priorityCards[1].x = BEGIN_RIGHT_GRID_X;
+            this.priorityCards[0].x = BEGIN_left_GRID_X;
+            this.priorityCards[1].x = BEGIN_right_GRID_X;
+            this.player_left.drawActions();
+
         } else {
-            ctx.strokeText(this.player_right.name, BEGIN_RIGHT_GRID_X + 160, BEGIN_GRID_Y - 10);
+            ctx.strokeText(this.player_right.name, BEGIN_right_GRID_X + 60, BEGIN_GRID_Y - 20);
             this.player_right.hand.drawHand();
-            this.priorityCards[0].x = BEGIN_RIGHT_GRID_X;
-            this.priorityCards[1].x = BEGIN_LEFT_GRID_X;
+            this.priorityCards[0].x = BEGIN_right_GRID_X;
+            this.priorityCards[1].x = BEGIN_left_GRID_X;
+            this.player_right.drawActions();
         }
 
         this.priorityCards[0].drawPriorityCard();
         this.priorityCards[1].drawPriorityCard();
+
+        this.player_left.field.drawGrid();
+        this.player_right.field.drawGrid();
     }
-
-    // playHero() {
-    //     let currentPlayer;
-    //     if (board.priority) {
-    //         currentPlayer = board.player_left;
-    //
-    //     } else currentPlayer = board.player_right;
-    //
-    //     for (let k = 0; k < currentPlayer.hand.hand.length; k++) {
-    //         currentPlayer.hand.hand[k].selectedState();
-    //         if (currentPlayer.hand.hand[k].isSelected) {
-    //             for (let i = 0; i < 3; i++) {
-    //                 for (let j = 0; j < 3; j++) {
-    //                     currentPlayer.field.grid[i][j].selectedState();
-    //                     if (currentPlayer.field.grid[i][j].isPressed && !currentPlayer.field.grid[i][j].object) {
-    //                         console.log("yep");
-    //                         currentPlayer.field.grid[i][j].object = currentPlayer.hand.hand[k].object;
-    //                         currentPlayer.hand.delete_card(k);
-    //
-    //                         currentPlayer.hand.hand[k].isPressed = false;
-    //                         currentPlayer.field.grid[i][j].isPressed = false;
-    //
-    //                         mouse.isPressed = false;
-    //                         mouse.underControl = false;
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-
-    makeAttack() {
-
-    }
-
-    moveHero() {
-
-    }
-
 }

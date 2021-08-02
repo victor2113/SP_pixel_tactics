@@ -4,6 +4,7 @@ class Card {
         this.damage = damage;
         this.img = new Image();
         this.img.src = "assets/deck/" + name + ".png"
+        this.leader = false;
     }
 }
 
@@ -70,12 +71,14 @@ class Assassin extends Card {
 class Knight extends Card {
     constructor() {
         super(10, 3, "knight");
+        this.leader = true;
     }
 }
 
 class Healer extends Card {
     constructor() {
         super(15, 1, "healer");
+        this.leader = true;
     }
 }
 
@@ -96,12 +99,12 @@ class PriorityCard {
 
 class PriorityFirstCard extends PriorityCard {
     constructor() {
-        super("assets/priority cards/cover card first player.png", BEGIN_LEFT_GRID_X);
+        super("assets/priority cards/cover card first player.png", BEGIN_left_GRID_X);
     }
 }
 
 class PrioritySecondCard extends PriorityCard {
     constructor() {
-        super("assets/priority cards/cover card second player.png", BEGIN_RIGHT_GRID_X);
+        super("assets/priority cards/cover card second player.png", BEGIN_right_GRID_X);
     }
 }

@@ -1,7 +1,4 @@
-
-# SP_pixel_tactics
-#https://victor2113.github.io/SP_pixel_tactics/
-Описание игры
+# Описание игры
 
 # КАРТЫ
 
