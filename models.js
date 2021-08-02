@@ -289,6 +289,7 @@ class Player {
 
 class Board {
     constructor(name1, name2) {
+        this.truceTime = 4;
         this.menu = new Menu();
         this.player_left = new Player(name1, "left");
         this.player_right = new Player(name2, "right");

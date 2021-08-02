@@ -4,10 +4,10 @@ function checkGameOver() {
 
 
 function resetBuffer() {
-    if (mouse.buffer1){
+    if (mouse.buffer1) {
         mouse.buffer1.isSelected = false;
     }
-    if (mouse.buffer2){
+    if (mouse.buffer2) {
         mouse.buffer2.isSelected = false;
     }
     mouse.buffer1 = null;
@@ -24,44 +24,44 @@ function replaceContent() {
 
 
 function listenAction(i) {
-    let currentPlayer;
-    let opposite;
+    let attackingPlayer;
+    let defendingPlayer;
     let side;
-    if (board.priority) {
-        currentPlayer = board.player_left;
-        opposite = board.player_right;
-        side = "left";
 
+    if (board.priority) {
+        attackingPlayer = board.player_left;
+        defendingPlayer = board.player_right;
+        side = "left";
     } else {
-        currentPlayer = board.player_right;
-        opposite = board.player_left;
+        attackingPlayer = board.player_right;
+        defendingPlayer = board.player_left;
         side = "right";
     }
 
 
     switch (i) {
 
+        //take the card
         case 0: {
-            if (currentPlayer.hand.hand.length < 5 && currentPlayer.deck.cards.length > 0) {
-                currentPlayer.hand.add_card(currentPlayer.deck.cards.splice(0, 1));
-                currentPlayer.actions -= 1;
-
+            if (attackingPlayer.hand.hand.length < 5 && attackingPlayer.deck.cards.length > 0) {
+                attackingPlayer.hand.add_card(attackingPlayer.deck.cards.splice(0, 1));
+                attackingPlayer.actions -= 1;
             } else {
                 alert("Вы не можете взять карту!");
             }
             break;
         }
 
-
+        //play hero
         case 1: {
-            if (currentPlayer.field.countCards < 9 && currentPlayer.hand.hand.length > 0) {
+            if (attackingPlayer.field.countCards < 9 && attackingPlayer.hand.hand.length > 0) {
                 if ((mouse.buffer1 && mouse.buffer2) &&
                     (mouse.buffer1.location === "hand" && mouse.buffer2.location === "grid") && (!mouse.buffer2.object) &&
                     (mouse.buffer2.side.toString() === side)) {
 
                     replaceContent();
-                    currentPlayer.field.countCards += 1;
-                    currentPlayer.actions -= 1;
+                    attackingPlayer.field.countCards += 1;
+                    attackingPlayer.actions -= 1;
                     break;
                 }
             }
@@ -69,16 +69,27 @@ function listenAction(i) {
             break;
         }
 
-
+        //make attack
         case 2: {
-            if ((mouse.buffer1 && mouse.buffer2) &&
+
+            if (board.truceTime > 0) {
+                alert("Нельзя атаковать во время перемирия!");
+            }
+
+            else if ((mouse.buffer1 && mouse.buffer2) &&
                 (mouse.buffer1.location === "grid" && mouse.buffer2.location === "grid") &&
                 (mouse.buffer1.object && mouse.buffer2.object) &&
                 (mouse.buffer1.side.toString() === side && mouse.buffer2.side.toString() !== side)) {
 
+                if (mouse.buffer2.object.leader &&
+                    (side === "right" && defendingPlayer.field.grid[2][1].object || side === "left" && defendingPlayer.field.grid[0][1].object)) {
+                    alert("Вы не можете атаковать лидера, когда впереди него стоит герой!");
+                    break;
+                }
+
                 mouse.buffer2.object.hp -= mouse.buffer1.object.damage;
                 if (mouse.buffer2.object.hp <= 0) {
-                    opposite.field.countCards -= 1;
+                    defendingPlayer.field.countCards -= 1;
                     mouse.buffer2.object = null;
 
                     if (checkGameOver()) {
@@ -87,7 +98,7 @@ function listenAction(i) {
                         location.reload();
                     }
                 }
-                currentPlayer.actions -= 1;
+                attackingPlayer.actions -= 1;
 
             } else {
                 alert("Вы не можете атаковать!");
@@ -96,33 +107,43 @@ function listenAction(i) {
             break;
         }
 
-
+        //move hero
         case 3: {
-            if (currentPlayer.field.countCards < 9) {
+
+            if (mouse.buffer1.object.leader) {
+                alert("Нельзя перемещать лидера!");
+                break;
+            }
+
+            else if (attackingPlayer.field.countCards < 9) {
                 if ((mouse.buffer1 && mouse.buffer2 && mouse.buffer1.object && !mouse.buffer2.object) &&
                     (mouse.buffer1.location === "grid" && mouse.buffer2.location === "grid") &&
-                    (mouse.buffer1.side.toString() === side && mouse.buffer2.side.toString() === side) &&
-                    (!mouse.buffer1.object.leader)) {
-                    currentPlayer.actions -= 1;
+                    (mouse.buffer1.side.toString() === side && mouse.buffer2.side.toString() === side)) {
+                    attackingPlayer.actions -= 1;
                     replaceContent();
                     break;
                 }
             }
-            alert("Вы не можете переместить героя!");
+            else {
+                alert("Вы не можете переместить героя!");
+            }
             break;
         }
 
-
+        //pass
         case 4: {
-            currentPlayer.actions -= 2;
+            attackingPlayer.actions -= 2;
             break;
         }
     }
 
     resetBuffer();
-    if (currentPlayer.actions < 1) {
+    if (attackingPlayer.actions < 1) {
         board.priority = !board.priority;
-        currentPlayer.actions = 2;
+        attackingPlayer.actions = 2;
+        if (board.truceTime > 0) {
+            board.truceTime -= 1;
+        }
     }
 }
 
